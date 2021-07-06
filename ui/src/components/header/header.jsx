@@ -7,7 +7,7 @@ function Header() {
     return (
         <div id='header'>
             <div>
-                <img src={Logo} id='logo' />
+                <img src={Logo} id='logo' alt='Logo' />
                 <SearchBar />
             </div>
             <div>

@@ -1,0 +1,65 @@
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
+
+#welcome {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    #image-div {
+        @include displayFlex(column);
+    }
+    #city-image {
+        height: 470px;
+        width: 696px;
+        background-position: center;
+        background-size: cover;
+    }
+    #location {
+        margin: 14px 12px 14px 0px;
+        display: flex;
+        align-items: center;
+        font-family: $header-font;
+        font-size: 15px;
+        align-self: flex-end;
+        font-weight: 300;
+        #room-icon {
+            margin-right: 5px;
+            font-size: 20px;
+        }
+        b {
+            font-weight: 500;
+        }
+    }
+    #intro {
+        width: 50%;
+        padding: 0px 116px;
+        font-family: $header-font;
+        h1 {
+            font-size: 56px;
+        }
+        p {
+            font-weight: 300;
+            font-size: 20px;
+            line-height: 30px;
+        }
+        #nearby-btn {
+            font-family: $header-font;
+            font-size: 16px;
+            background-color: $main-color;
+            padding: 10px 16px;
+            border: 2px solid transparent;
+            font-weight: 700;
+            border-radius: 12px;
+            height: 38px;
+            @include displayFlex(row);
+            transition: 0.3s;
+            span {
+                margin-left: 5px;
+            }
+        }
+        #nearby-btn:hover {
+            cursor: pointer;
+            border: 2px solid rgb(32, 32, 32);
+        }
+    }
+}
