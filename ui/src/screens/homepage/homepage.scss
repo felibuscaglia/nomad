@@ -59,7 +59,26 @@
         }
         #nearby-btn:hover {
             cursor: pointer;
-            border: 2px solid rgb(32, 32, 32);
+            border: 2px solid #D4D4D4;
         }
+    }
+}
+
+#countries {
+    font-family: $header-font;
+    font-size: 24px;
+    margin: 50px 116px;
+    h3 {
+        margin-left: 24px;
+    }
+    #country-preview-container {
+        display: flex;
+        align-items: center;
+        max-width: 100%;
+        overflow-x: auto;
+        padding: 10px 0px;
+    }
+    #country-preview-container::-webkit-scrollbar {
+        display: none;
     }
 }

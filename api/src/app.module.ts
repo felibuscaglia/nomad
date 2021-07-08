@@ -8,13 +8,15 @@ import { CitiesModule } from './cities/cities.module';
 import { CountriesModule } from './countries/countries.module';
 import { Country } from './countries/models/country.model';
 import { City } from './cities/models/city.model';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot(),
     CitiesModule,
-    CountriesModule
+    CountriesModule,
+    CommonModule
   ],
   controllers: [AppController],
   providers: [AppService],
