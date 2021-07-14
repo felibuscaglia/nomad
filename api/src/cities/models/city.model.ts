@@ -12,6 +12,12 @@ export class City {
     @Column({ nullable: true })
     image: string;
 
+    @Column({ default: 0 })
+    rank: number;
+
+    @Column({ default: 0 })
+    voteCount: number;
+
     @ManyToOne(type => Country)
     @JoinColumn({ name: 'country_id' })
     country: Country;

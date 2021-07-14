@@ -29,7 +29,7 @@ export class CountriesService {
             const mappedCountries: Country[] = [];
             for (const country of allCountries) {
                 const name = country.name;
-                const countryImage = await this.commonService.getImages(country.name, false);
+                const countryImage = await this.commonService.getImages(country.name);
                 mappedCountries.push({ name, image: countryImage });
             }
             return await this.insertMultipleCountries(mappedCountries);

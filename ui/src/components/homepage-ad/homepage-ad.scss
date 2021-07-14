@@ -1,0 +1,57 @@
+@import "../../styles/mixins.scss";
+@import "../../styles/variables.scss";
+
+#main-div {
+    margin: 0px 20px 40px 20px;
+    #local-ad {
+        height: 232px;
+        width: 348px;
+        font-size: 16px;
+        background: #eeeeee;
+        border-radius: 12px;
+        @include displayFlexJustify(center, center, column);
+        div {
+            @include displayFlex(row);
+            span {
+                font-size: 19px;
+                color: black;
+                font-weight: 600;
+                margin-left: 5px;
+            }
+            .logo {
+                color: black;
+                background: $main-color;
+                border-radius: 2px;
+                padding: 1px;
+            }
+        }
+        #advertise {
+            font-size: 14.4px;
+            color: #767676;
+            text-align: center;
+            margin: 25px 0px;
+        }
+        button {
+            @include homepage-btn(106px);
+        }
+    }
+    #extra-data {
+        @include displayFlexJustify(space-between, center);
+        margin-top: 10px;
+        h3 {
+            @include preview-title();
+        }
+        h3:hover {
+            cursor: pointer;
+            background: $main-color;
+        }
+        span {
+            font-size: 13px;
+            background: $main-color;
+            color: #333333;
+            padding: 3px 9px;
+            border-radius: 20px;
+            font-weight: 300;
+        }
+    }
+}

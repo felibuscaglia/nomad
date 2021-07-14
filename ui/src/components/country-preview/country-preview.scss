@@ -8,7 +8,7 @@
     cursor: pointer;
     @include displayFlex(row);
     box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 5px 0px;
-    border-radius: 8px;
+    border-radius: 12px;
     transition: 0.2s;
     margin: 0px 24px;
     #country-image {
@@ -17,8 +17,8 @@
         max-width: 102px;
         background-position: center;
         background-size: cover;
-        border-top-left-radius: 8px;
-        border-bottom-left-radius: 8px;
+        border-top-left-radius: 12px;
+        border-bottom-left-radius: 12px;
     }
     div {
         font-size: 15px;
@@ -27,6 +27,7 @@
         align-items: center;
         justify-content: center;
         width: 100%;
+        padding: 0px 10px;
     }
 }
 #preview:hover {

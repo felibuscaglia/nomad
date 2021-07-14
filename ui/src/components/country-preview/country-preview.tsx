@@ -1,5 +1,9 @@
+import { Country } from '../../shared/interfaces';
 import './country-preview.scss';
-import { CountryPreviewProps } from './interfaces';
+
+export interface CountryPreviewProps {
+    country: Country;
+}
 
 function CountryPreview(props: CountryPreviewProps) {
     return (

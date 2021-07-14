@@ -1,12 +1,15 @@
+@import "./variables.scss";
+
 @mixin displayFlex($flex-direction) {
     display: flex;
     align-items: center;
     flex-direction: $flex-direction;
 }
 
-@mixin displayFlexJustify($justify) {
-    @include displayFlex(row);
+@mixin displayFlexJustify($justify, $align: center, $flex-direction: row) {
+    @include displayFlex($flex-direction);
     justify-content: $justify;
+    align-items: $align;
 }
 
 @mixin header-button($border-bottom-color) {
@@ -21,4 +24,41 @@
     cursor: pointer;
     @include displayFlexJustify(center);
     border-bottom: 4px solid $border-bottom-color;
+}
+
+@mixin homepage-btn($width) {
+    font-family: $header-font;
+    font-size: 16px;
+    background-color: $main-color;
+    padding: 10px 16px;
+    border: 2px solid transparent;
+    font-weight: 700;
+    border-radius: 12px;
+    height: 38px;
+    @include displayFlex(row);
+    transition: 0.3s;
+    width: $width;
+    span {
+        margin-left: 5px;
+    }
+}
+
+@mixin homepage-div {
+    font-family: $header-font;
+    font-size: 24px;
+    margin: 50px 116px;
+    @include displayFlex(column);
+    h3 {
+        align-self: flex-start;
+    }
+}
+
+@mixin preview-title {
+    font-weight: 700;
+    font-size: 19px;
+    margin: 0px;
+    transition: 0.2s;
+    width: -moz-fit-content;
+    width: fit-content;
+    display: table;
 }

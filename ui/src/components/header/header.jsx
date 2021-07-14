@@ -1,13 +1,12 @@
-import * as React from 'react';
 import './header.scss';
 import SearchBar from '../search-bar/search-bar';
-import Logo from '../../assets/passport.png';
+import ExploreIcon from '@material-ui/icons/Explore';
 
 function Header() {
     return (
         <div id='header'>
             <div>
-                <img src={Logo} id='logo' alt='Logo' />
+                <ExploreIcon className='logo' />
                 <SearchBar />
             </div>
             <div>

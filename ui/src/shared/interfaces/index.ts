@@ -3,6 +3,8 @@ export interface City {
     name: string;
     image: string;
     country: Country;
+    rank: number;
+    voteCount: number;
 }
 
 export interface Country {
@@ -13,4 +15,12 @@ export interface Country {
 
 export interface ReduxState {
     cities: City[]
+}
+
+export interface Ad {
+    id: number;
+    companyName?: string;
+    description?: string;
+    image?: string;
+    local: boolean;
 }

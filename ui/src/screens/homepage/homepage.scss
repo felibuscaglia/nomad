@@ -1,5 +1,5 @@
-@import '../../styles/variables.scss';
-@import '../../styles/mixins.scss';
+@import "../../styles/variables.scss";
+@import "../../styles/mixins.scss";
 
 #welcome {
     display: flex;
@@ -43,34 +43,17 @@
             line-height: 30px;
         }
         #nearby-btn {
-            font-family: $header-font;
-            font-size: 16px;
-            background-color: $main-color;
-            padding: 10px 16px;
-            border: 2px solid transparent;
-            font-weight: 700;
-            border-radius: 12px;
-            height: 38px;
-            @include displayFlex(row);
-            transition: 0.3s;
-            span {
-                margin-left: 5px;
-            }
+            @include homepage-btn(252px);
         }
         #nearby-btn:hover {
             cursor: pointer;
-            border: 2px solid #D4D4D4;
+            border: 2px solid #d4d4d4;
         }
     }
 }
 
 #countries {
-    font-family: $header-font;
-    font-size: 24px;
-    margin: 50px 116px;
-    h3 {
-        margin-left: 24px;
-    }
+    @include homepage-div;
     #country-preview-container {
         display: flex;
         align-items: center;
@@ -80,5 +63,26 @@
     }
     #country-preview-container::-webkit-scrollbar {
         display: none;
+    }
+}
+
+#around-the-world {
+    @include homepage-div;
+    button {
+        @include homepage-btn(1118px);
+        @include displayFlexJustify(center);
+    }
+    button:hover {
+        cursor: pointer;
+        border: 2px solid #d4d4d4;
+    }
+    .cities-container {
+        margin: 45px 0px;
+        @include displayFlexJustify(center, flex-start);
+        flex-wrap: wrap;
+        h4 {
+            width: 1200px;
+            text-align: center;
+        }
     }
 }

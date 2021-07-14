@@ -1,0 +1,38 @@
+@import "../../styles/variables.scss";
+@import '../../styles/mixins.scss';
+
+#city-preview {
+    margin: 0px 20px 40px 20px;
+    #image {
+        height: 232px;
+        width: 348px;
+        border-radius: 8px;
+        background-position: center;
+        background-size: cover;
+        cursor: pointer;
+    }
+    #data {
+        @include displayFlexJustify(space-between, flex-start);
+        width: 100%;
+        margin-top: 10px;
+        #names {
+            h3 {
+                @include preview-title();
+            }
+            h3:hover {
+                cursor: pointer;
+                background: $main-color;
+            }
+            span {
+                font-size: 14.4px;
+                color: #767676;
+                transition: 0.2s;
+                font-weight: 300;
+            }
+            span:hover {
+                cursor: pointer;
+                background: $main-color;
+            }
+        }
+    }
+}

@@ -7,6 +7,8 @@ import { Country } from 'src/countries/models/country.model';
 import * as _ from 'lodash';
 import { CountriesService } from 'src/countries/countries.service';
 import { CommonService } from 'src/common/common.service';
+import { AdsService } from 'src/ads/ads.service';
+import { Ad } from 'src/ads/models/ad.model';
 
 @Injectable()
 export class CitiesService {
@@ -14,14 +16,17 @@ export class CitiesService {
         @InjectRepository(City)
         private cityRepository: Repository<City>,
         private readonly countriesService: CountriesService,
-        private readonly commonService: CommonService
+        private readonly commonService: CommonService,
+        private readonly adsService: AdsService
     ) { }
 
     async saveCity(name: string, country: Country) {
         const newCity: City = {
             name,
-            image: await this.commonService.getImages(name, true),
-            country
+            image: await this.commonService.getImages(name),
+            country,
+            rank: 0,
+            voteCount: 0
         }
         console.log(`Saving new city: ${name}`);
         return this.cityRepository.save(newCity);
@@ -61,5 +66,20 @@ export class CitiesService {
             return [];
         }
         return citiesFromCountry;
+    }
+
+    async getCitiesWithAds(page: number): Promise<(City | Ad)[]> {
+        const paginationStart =  (page - 1) * 8;
+        const paginationEnd = page * 8;
+        const cities = await this.cityRepository.createQueryBuilder('city')
+            .leftJoinAndSelect('city.country', 'country')
+            .orderBy('city.rank', 'DESC')
+            .limit(paginationEnd)
+            .getMany();
+        const slicedCities = cities.slice(paginationStart, paginationEnd);
+        const ads = await this.adsService.getAds(page);
+        const noMoreAds = ads.length < page;
+
+        return noMoreAds ? slicedCities : this.commonService.insertInArray(slicedCities, 2, _.last(ads));
     }
 }

@@ -8,9 +8,9 @@
     justify-content: space-between;
     div {
         @include displayFlex(row);
-    }
-    #logo {
-        height: 40px;
+        .logo {
+            font-size: 30px;
+        }
     }
     .header-btn {
         @include header-button(transparent);

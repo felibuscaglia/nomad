@@ -9,6 +9,7 @@ import { CountriesModule } from './countries/countries.module';
 import { Country } from './countries/models/country.model';
 import { City } from './cities/models/city.model';
 import { CommonModule } from './common/common.module';
+import { AdsModule } from './ads/ads.module';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { CommonModule } from './common/common.module';
     TypeOrmModule.forRoot(),
     CitiesModule,
     CountriesModule,
-    CommonModule
+    CommonModule,
+    AdsModule
   ],
   controllers: [AppController],
   providers: [AppService],

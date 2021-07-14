@@ -13,4 +13,4 @@ async function runAsync(limit: number) {
 }
 
 
-runAsync(1);
+runAsync(50);
