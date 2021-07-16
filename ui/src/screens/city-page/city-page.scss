@@ -1,0 +1,45 @@
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
+
+#city-page {
+    font-family: $header-font;
+    @include displayFlex(column, flex-start);
+    padding: 20px 10%;
+    h1 {
+        font-size: 48px;
+        font-weight: 700;
+        margin: 0px 0px 10px 0px;
+    }
+    #cover {
+        width: 1150px;
+        height: 390px;
+        border-radius: 12px;
+        background-position: center;
+        background-size: cover;
+        align-self: center;
+        margin-top: 40px;
+    }
+    #rating {
+        @include displayFlex(row);
+        .star-icon {
+            color: $rating-color;
+            margin-right: 4px;
+        }
+        span {
+            font-weight: bold;
+        }
+        #country-name {
+            @include country-span;
+            margin-left: 15px;
+        }
+    }
+    h3 {
+        margin: 50px 0px 18px 0px;
+        font-size: 24px;
+    }
+    p {
+        font-size: 17px;
+        line-height: 26px;
+        margin: 18px 0px;
+    }
+}

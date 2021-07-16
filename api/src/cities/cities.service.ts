@@ -9,6 +9,7 @@ import { CountriesService } from 'src/countries/countries.service';
 import { CommonService } from 'src/common/common.service';
 import { AdsService } from 'src/ads/ads.service';
 import { Ad } from 'src/ads/models/ad.model';
+import { Pages, Query, WikipediaDTO } from './dto/wikipedia.dto';
 
 @Injectable()
 export class CitiesService {
@@ -26,7 +27,8 @@ export class CitiesService {
             image: await this.commonService.getImages(name),
             country,
             rank: 0,
-            voteCount: 0
+            voteCount: 0,
+            description: await this.getCityDescriptions(name)
         }
         console.log(`Saving new city: ${name}`);
         return this.cityRepository.save(newCity);
@@ -69,7 +71,7 @@ export class CitiesService {
     }
 
     async getCitiesWithAds(page: number): Promise<(City | Ad)[]> {
-        const paginationStart =  (page - 1) * 8;
+        const paginationStart = (page - 1) * 8;
         const paginationEnd = page * 8;
         const cities = await this.cityRepository.createQueryBuilder('city')
             .leftJoinAndSelect('city.country', 'country')
@@ -82,4 +84,37 @@ export class CitiesService {
 
         return noMoreAds ? slicedCities : this.commonService.insertInArray(slicedCities, 2, _.last(ads));
     }
+
+    async getCityDescriptions(cityName: string) {
+        try {
+            const uriEncodedCityName = encodeURI(cityName);
+            const wikipediaDTO = await axios.get<WikipediaDTO>(`https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&explaintext=1&exsentences=7&titles=${uriEncodedCityName}`);
+            if (wikipediaDTO) {
+                return this.getWikipediaDescriptionFromQuery(wikipediaDTO.data?.query);
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    getWikipediaDescriptionFromQuery(query: Query) {
+        if (!query) return null;
+
+        const pages = query.pages;
+        const keyPages = _.values(pages);
+        return _.first(keyPages)?.extract ?? null;
+    }
+
+    getAllCities() {
+        return this.cityRepository.find();
+    }
+
+    async updateCity(city: City) {
+        await this.cityRepository.update(city.id, city);
+    }
+
+    getCity(id: number) {
+        return this.cityRepository.findOne({ where: { id }, relations: ['country'] });
+    }
+
 }

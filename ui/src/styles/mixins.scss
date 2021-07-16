@@ -1,8 +1,8 @@
 @import "./variables.scss";
 
-@mixin displayFlex($flex-direction) {
+@mixin displayFlex($flex-direction, $align: center) {
     display: flex;
-    align-items: center;
+    align-items: $align;
     flex-direction: $flex-direction;
 }
 
@@ -61,4 +61,16 @@
     width: -moz-fit-content;
     width: fit-content;
     display: table;
+}
+
+@mixin links($color) {
+    text-decoration: none;
+    color: $color;
+}
+
+@mixin country-span {
+    font-size: 14.4px;
+    color: #767676;
+    transition: 0.2s;
+    font-weight: 300;
 }

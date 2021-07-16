@@ -7,6 +7,9 @@
     @include displayFlex(row);
     justify-content: space-between;
     div {
+        #link {
+            @include links(black);
+        }
         @include displayFlex(row);
         .logo {
             font-size: 30px;

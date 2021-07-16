@@ -18,6 +18,9 @@ export class City {
     @Column({ default: 0 })
     voteCount: number;
 
+    @Column({ nullable: true })
+    description: string;
+
     @ManyToOne(type => Country)
     @JoinColumn({ name: 'country_id' })
     country: Country;

@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
 import { Ad } from 'src/ads/models/ad.model';
 import { CitiesService } from './cities.service';
 import { City } from './models/city.model';
@@ -17,5 +17,10 @@ export class CitiesController {
     @Get('/')
     async getCities(@Query('page') page: string): Promise<(City | Ad)[]> {
         return await this.citiesService.getCitiesWithAds(Number(page));
+    }
+
+    @Get(':cityId')
+    async getCity(@Param('cityId', ParseIntPipe) cityId: number) {
+        return await this.citiesService.getCity(cityId);
     }
 }

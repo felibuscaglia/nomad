@@ -15,5 +15,5 @@ module.exports = {
     "cli": {
         "migrationsDir": "src/migration"
     },
-    "synchronize": false
+    "synchronize": true // TODO: Update when moving to PROD
 }

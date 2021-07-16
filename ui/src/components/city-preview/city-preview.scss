@@ -16,6 +16,9 @@
         width: 100%;
         margin-top: 10px;
         #names {
+            #link {
+                @include links(black);
+            }
             h3 {
                 @include preview-title();
             }
@@ -24,10 +27,7 @@
                 background: $main-color;
             }
             span {
-                font-size: 14.4px;
-                color: #767676;
-                transition: 0.2s;
-                font-weight: 300;
+                @include country-span;
             }
             span:hover {
                 cursor: pointer;

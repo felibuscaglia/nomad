@@ -1,12 +1,13 @@
 import './header.scss';
 import SearchBar from '../search-bar/search-bar';
 import ExploreIcon from '@material-ui/icons/Explore';
+import { Link } from 'react-router-dom';
 
 function Header() {
     return (
         <div id='header'>
             <div>
-                <ExploreIcon className='logo' />
+                <Link id='link' to='/'><ExploreIcon className='logo' /></Link>
                 <SearchBar />
             </div>
             <div>
