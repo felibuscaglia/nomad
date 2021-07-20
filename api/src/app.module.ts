@@ -10,6 +10,8 @@ import { Country } from './countries/models/country.model';
 import { City } from './cities/models/city.model';
 import { CommonModule } from './common/common.module';
 import { AdsModule } from './ads/ads.module';
+import { PillarsModule } from './pillars/pillars.module';
+import { CityPillarsModule } from './city-pillars/city-pillars.module';
 
 @Module({
   imports: [
@@ -18,7 +20,9 @@ import { AdsModule } from './ads/ads.module';
     CitiesModule,
     CountriesModule,
     CommonModule,
-    AdsModule
+    AdsModule,
+    PillarsModule,
+    CityPillarsModule
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -9,7 +9,10 @@ import { CountriesService } from 'src/countries/countries.service';
 import { CommonService } from 'src/common/common.service';
 import { AdsService } from 'src/ads/ads.service';
 import { Ad } from 'src/ads/models/ad.model';
-import { Pages, Query, WikipediaDTO } from './dto/wikipedia.dto';
+import { Query, WikipediaDTO } from './dto/wikipedia.dto';
+import { TeleportDTO } from './dto/teleport.dto';
+import { PillarsService } from 'src/pillars/pillars.service';
+import { CityPillarsService } from 'src/city-pillars/city-pillars.service';
 
 @Injectable()
 export class CitiesService {
@@ -18,7 +21,9 @@ export class CitiesService {
         private cityRepository: Repository<City>,
         private readonly countriesService: CountriesService,
         private readonly commonService: CommonService,
-        private readonly adsService: AdsService
+        private readonly adsService: AdsService,
+        private readonly pillarsService: PillarsService,
+        private readonly cityPillarsService: CityPillarsService
     ) { }
 
     async saveCity(name: string, country: Country) {
@@ -46,13 +51,17 @@ export class CitiesService {
     async getCitiesFromAPI(limit: number) {
         let allCities = [];
         const allCountries = await this.countriesService.getAllCountries();
+        const allPillars = await this.pillarsService.getAllPillars();
         for (const country of allCountries) {
             const citiesFromCountry = await this.getCitiesFromCountryAPI(country);
             allCities = allCities.concat(citiesFromCountry);
             if (allCities.length >= limit) break;
         }
         for (const city of allCities) {
-            await this.saveCity(city.name, city.country);
+            const newCity = await this.saveCity(city.name, city.country);
+            for (const pillar of allPillars) {
+                await this.cityPillarsService.createRelation(newCity, pillar, 0);
+            }
         }
     }
 
@@ -114,7 +123,24 @@ export class CitiesService {
     }
 
     getCity(id: number) {
-        return this.cityRepository.findOne({ where: { id }, relations: ['country'] });
+        return this.cityRepository.createQueryBuilder('city')
+            .leftJoinAndSelect('city.pillars', 'cityPillars')
+            .leftJoinAndSelect('cityPillars.pillar', 'pillar')
+            .where('cityPillars.city.id = :id', { id })
+            .getOne();
     }
 
+    async getCityScores(city: City, encodedName: string) {
+        try {
+            const teleportDTO = await axios.get<TeleportDTO>(`${process.env.TELEPORT_API_URL}/api/urban_areas/slug:${encodedName}/scores/`);
+            if (teleportDTO) {
+                for (const category of teleportDTO.data?.categories) {
+                    const pillar = await this.pillarsService.createPillar(category.name);
+                    await this.cityPillarsService.createRelation(city, pillar, category.score_out_of_10);
+                }
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    }
 }

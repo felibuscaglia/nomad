@@ -1,5 +1,6 @@
+import { CityPillars } from "src/city-pillars/models/city-pillars.model";
 import { Country } from "src/countries/models/country.model";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class City {
@@ -24,4 +25,7 @@ export class City {
     @ManyToOne(type => Country)
     @JoinColumn({ name: 'country_id' })
     country: Country;
+
+    @OneToMany(type => CityPillars, cityPillars => cityPillars.city)
+    pillars?: CityPillars[];
 }

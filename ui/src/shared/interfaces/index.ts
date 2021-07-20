@@ -8,8 +8,19 @@ export interface City {
     rank: number;
     voteCount: number;
     description: string;
+    pillars: CityPillars[];
 }
 
+export interface CityPillars {
+  pillar: Pillar;
+  score: number;
+  voteCount: number;
+}
+
+export interface Pillar {
+  id: number;
+  name: string;
+}
 export interface Country {
     id: number;
     name: string;
