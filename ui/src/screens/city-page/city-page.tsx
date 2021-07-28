@@ -1,13 +1,14 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { City, CityPillars, RouteComponentProps } from '../../shared/interfaces';
+import { Ad, City, CityPillars, RouteComponentProps } from '../../shared/interfaces';
 import './city-page.scss';
 import StarIcon from '@material-ui/icons/Star';
 import { getCityRatingForPage } from '../../shared/utils';
-import { CheckCircle, Cancel, RemoveCircle } from '@material-ui/icons';
+import { CheckCircle, Cancel, RemoveCircle, Report } from '@material-ui/icons';
 import Tooltip from '@material-ui/core/Tooltip';
 import _ from 'lodash';
 import { withStyles } from '@material-ui/core';
+import AdComponent from '../../components/homepage-ad/homepage-ad';
 
 interface MatchParams {
     cityId: string;
@@ -16,10 +17,15 @@ interface MatchParams {
 function CityPage(props: RouteComponentProps<MatchParams>) {
     const { cityId } = props.match.params;
     const [city, setCity] = useState<City>({} as City);
+    const [ads, setAds] = useState<Ad[]>([]);
 
     useEffect(() => {
         axios.get<City>(`/cities/${cityId}`)
             .then(city => setCity(city.data))
+            .catch(err => console.error(err));
+
+        axios.get<Ad[]>('/ads')
+            .then(ads => setAds(ads.data))
             .catch(err => console.error(err));
     }, [cityId]);
 
@@ -39,7 +45,7 @@ function CityPage(props: RouteComponentProps<MatchParams>) {
         const score = cityPillar?.score / cityPillar?.voteCount;
         if (_.isNaN(score)) return 'N/A';
         else return (
-            <StyledTooltip title={`${score} points out of ${cityPillar?.voteCount} votes received.`} placement='top'>
+            <StyledTooltip title={`${score} ${score === 1 ? 'point' : 'points'} out of ${cityPillar?.voteCount} votes received.`} placement='top'>
                 {getIcon(score)}
             </StyledTooltip>
         )
@@ -53,15 +59,21 @@ function CityPage(props: RouteComponentProps<MatchParams>) {
 
     return (
         <div id='city-page'>
-            <h1>{city?.name}</h1>
-            <div id='rating'>
-                <StarIcon className='star-icon' />
-                <span>{getCityRatingForPage(city)}</span>
-                <span id='country-name'>{city?.country?.name}</span>
+            <div id='first-div'>
+                <div>
+                    <h1>{city?.name}</h1>
+                    <div id='rating'>
+                        <StarIcon className='star-icon' />
+                        <span>{getCityRatingForPage(city)}</span>
+                        <span id='country-name'>{city?.country?.name}</span>
+                    </div>
+                </div>
+                <button><Report /> Report this city data</button>
             </div>
             <div id='cover' style={{ backgroundImage: `url(${city?.image})` }}></div>
             <h3>About {city?.name}</h3>
             <p>{city?.description}</p>
+            <h3>City Pillars</h3>
             <div id='pillars-wrapper'>
                 {city?.pillars?.map((cityPillar, index) => {
                     return (
@@ -71,6 +83,9 @@ function CityPage(props: RouteComponentProps<MatchParams>) {
                         </div>
                     )
                 })}
+            </div>
+            <div id='ads-wrapper'>
+                {ads?.map(ad => <AdComponent ad={ad} />)}
             </div>
         </div>
     )

@@ -124,6 +124,7 @@ export class CitiesService {
 
     getCity(id: number) {
         return this.cityRepository.createQueryBuilder('city')
+            .leftJoinAndSelect('city.country', 'country')
             .leftJoinAndSelect('city.pillars', 'cityPillars')
             .leftJoinAndSelect('cityPillars.pillar', 'pillar')
             .where('cityPillars.city.id = :id', { id })

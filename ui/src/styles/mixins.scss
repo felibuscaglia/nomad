@@ -36,8 +36,10 @@
     border-radius: 12px;
     height: 38px;
     @include displayFlex(row);
+    justify-content: space-around;
     transition: 0.3s;
     width: $width;
+    cursor: pointer;
     span {
         margin-left: 5px;
     }
@@ -73,4 +75,9 @@
     color: #767676;
     transition: 0.2s;
     font-weight: 300;
+}
+
+@mixin display-grid ($columns) {
+    display: grid;
+    grid-template-columns: repeat($columns, minmax(0, 1fr));
 }

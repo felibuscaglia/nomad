@@ -1,14 +1,12 @@
 import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
 import { Ad } from 'src/ads/models/ad.model';
-import { CityPillarsService } from 'src/city-pillars/city-pillars.service';
 import { CitiesService } from './cities.service';
 import { City } from './models/city.model';
 
 @Controller('cities')
 export class CitiesController {
     constructor(
-        private readonly citiesService: CitiesService,
-        private readonly cityPillarsService: CityPillarsService
+        private readonly citiesService: CitiesService
     ) { }
 
     @Get('/gallery')

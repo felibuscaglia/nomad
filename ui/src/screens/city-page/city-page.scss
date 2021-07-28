@@ -19,18 +19,25 @@
         align-self: center;
         margin-top: 40px;
     }
-    #rating {
-        @include displayFlex(row);
-        .star-icon {
-            color: $rating-color;
-            margin-right: 4px;
+    #first-div {
+        @include displayFlexJustify(space-between);
+        width: 100%;
+        #rating {
+            @include displayFlex(row);
+            .star-icon {
+                color: $rating-color;
+                margin-right: 4px;
+            }
+            span {
+                font-weight: bold;
+            }
+            #country-name {
+                @include country-span;
+                margin-left: 15px;
+            }
         }
-        span {
-            font-weight: bold;
-        }
-        #country-name {
-            @include country-span;
-            margin-left: 15px;
+        button {
+            @include homepage-btn(220px);
         }
     }
     h3 {
@@ -45,8 +52,7 @@
     #pillars-wrapper {
         margin-top: 25px;
         border-radius: 10px;
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        @include display-grid(2);
         align-self: center;
         width: 100%;
         border: 1px solid #EEEEEE;
@@ -75,5 +81,9 @@
                 color: #ffe203;
             }
         }
+    }
+    #ads-wrapper {
+        @include display-grid(3);
+        margin-top: 75px;
     }
 }
