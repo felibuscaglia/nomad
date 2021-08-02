@@ -6,7 +6,6 @@ import StarIcon from '@material-ui/icons/Star';
 import { getCityRatingForPage } from '../../shared/utils';
 import { CheckCircle, Cancel, RemoveCircle, Report } from '@material-ui/icons';
 import Tooltip from '@material-ui/core/Tooltip';
-import _ from 'lodash';
 import { withStyles } from '@material-ui/core';
 import AdComponent from '../../components/homepage-ad/homepage-ad';
 
@@ -43,7 +42,7 @@ function CityPage(props: RouteComponentProps<MatchParams>) {
 
     function getIconAndTooltip(cityPillar: CityPillars) {
         const score = cityPillar?.score / cityPillar?.voteCount;
-        if (_.isNaN(score)) return 'N/A';
+        if (isNaN(score)) return 'N/A';
         else return (
             <StyledTooltip title={`${score} ${score === 1 ? 'point' : 'points'} out of ${cityPillar?.voteCount} votes received.`} placement='top'>
                 {getIcon(score)}

@@ -39,7 +39,7 @@ export interface Country {
 }
 
 export interface ReduxState {
-    cities: City[]
+    jobs: Job[]
 }
 
 export interface Ad {
@@ -61,4 +61,9 @@ export interface match<P> {
   isExact: boolean;
   path: string;
   url: string;
+}
+
+export interface Job {
+  id: number;
+  title: string;
 }

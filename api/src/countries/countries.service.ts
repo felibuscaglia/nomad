@@ -3,9 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import axios from 'axios';
 import { CommonService } from '../common/common.service';
 import { getConnection, Repository } from 'typeorm';
-import { RestCountriesDTO } from './interfaces';
+import { RestCountriesDTO, TeleportSalariesDTO } from './interfaces';
 import { Country } from './models/country.model';
 import { CountryFactory } from './country.factory';
+import { SalaryCountryService } from '../salary-country/salary-country.service';
 
 @Injectable()
 export class CountriesService {
@@ -13,7 +14,8 @@ export class CountriesService {
         @InjectRepository(Country)
         private countryRepository: Repository<Country>,
         private readonly commonService: CommonService,
-        private readonly countryFactory: CountryFactory
+        private readonly countryFactory: CountryFactory,
+        private readonly countrySalaryService: SalaryCountryService
     ) { }
 
     saveCountry(country: Country) {
@@ -65,5 +67,18 @@ export class CountriesService {
             .getMany();
     }
 
-    getCountryById = (id: number) => this.countryRepository.findOne({ where: { id } });
+    getCountryById = (id: number) => this.countryRepository.findOne({ where: { id }, relations: ['jobs'] });
+
+    async getCountrySalary(country: Country) {
+        try {
+            const countrySalaryDTO = await axios.get<TeleportSalariesDTO>(`https://api.teleport.org/api/countries/iso_alpha2:${country.isoCode}/salaries/`);
+            if (countrySalaryDTO) {
+                for (const jobData of countrySalaryDTO?.data?.salaries) {
+                    await this.countrySalaryService.saveCountrySalary(jobData, country);
+                }
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    }
 }

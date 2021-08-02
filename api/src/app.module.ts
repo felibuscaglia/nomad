@@ -12,7 +12,8 @@ import { CommonModule } from './common/common.module';
 import { AdsModule } from './ads/ads.module';
 import { PillarsModule } from './pillars/pillars.module';
 import { CityPillarsModule } from './city-pillars/city-pillars.module';
-import { SalaryModule } from './salary/salary.module';
+import { JobModule } from './job/job.module';
+import { SalaryCountryModule } from './salary-country/salary-country.module';
 
 @Module({
   imports: [
@@ -24,7 +25,8 @@ import { SalaryModule } from './salary/salary.module';
     AdsModule,
     PillarsModule,
     CityPillarsModule,
-    SalaryModule
+    JobModule,
+    SalaryCountryModule
   ],
   controllers: [AppController],
   providers: [AppService],

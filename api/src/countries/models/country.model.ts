@@ -1,4 +1,5 @@
-import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { CountrySalary } from "../../salary-country/models/country-salary.model";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Country {
@@ -43,4 +44,10 @@ export class Country {
 
     @Column()
     description: string;
+
+    @Column()
+    isoCode: string;
+
+    @OneToMany(type => CountrySalary, countrySalary => countrySalary.country)
+    jobs?: CountrySalary[];
 }

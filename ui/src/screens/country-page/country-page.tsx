@@ -3,6 +3,9 @@ import { Country, RouteComponentProps } from '../../shared/interfaces';
 import './country-page.scss';
 import axios from 'axios';
 import { Cancel, CheckCircle } from '@material-ui/icons';
+import store from '../../store/store';
+import { observer, inject } from 'mobx-react';
+import JobSalaryCalculator from '../../components/job-salary-calculator/job-salary-calculator';
 
 interface MatchParams {
     countryId: string;
@@ -16,6 +19,9 @@ function CountryPage(props: RouteComponentProps<MatchParams>) {
         axios.get<Country>(`/countries/${countryId}`)
             .then(countryDTO => setCountry(countryDTO.data))
             .catch(err => console.error(err));
+
+        store.getAllJobs();
+
     }, [countryId])
 
     function getIcon(item: boolean) {
@@ -32,43 +38,44 @@ function CountryPage(props: RouteComponentProps<MatchParams>) {
             <div id='pillars-wrapper'>
                 <div className='pillar'>
                     <span>Independent</span>
-                    {getIcon(country.independent)}
+                    {getIcon(country?.independent)}
                 </div>
                 <div className='pillar' id='first'>
-                    <span>🇺🇳 UN Member</span> 
-                    {getIcon(country.unMember)}
+                    <span>🇺🇳 UN Member</span>
+                    {getIcon(country?.unMember)}
                 </div>
                 <div className='pillar'>
-                    <span>Currency</span> 
-                    {country.currency}
+                    <span>Currency</span>
+                    {country?.currency}
                 </div>
                 <div className='pillar'>
-                    <span>Capital</span> 
-                    {country.capital}
+                    <span>Capital</span>
+                    {country?.capital}
                 </div>
                 <div className='pillar'>
-                    <span>Region</span> 
-                    {country.region}
+                    <span>Region</span>
+                    {country?.region}
                 </div>
                 <div className='pillar'>
-                    <span>Subregion</span> 
-                    {country.subregion}
+                    <span>Subregion</span>
+                    {country?.subregion}
                 </div>
                 <div className='pillar'>
-                    <span>Language(s)</span> 
-                    {country.languages}
+                    <span>Language(s)</span>
+                    {country?.languages}
                 </div>
                 <div className='pillar'>
-                    <span>Landlocked</span> 
-                    {getIcon(country.landlocked)}
+                    <span>Landlocked</span>
+                    {getIcon(country?.landlocked)}
                 </div>
                 <div className='pillar'>
-                    <span>Area</span> 
-                    {country.area.toLocaleString()} km²
+                    <span>Area</span>
+                    {country?.area?.toLocaleString()} km²
                 </div>
             </div>
+           <JobSalaryCalculator />
         </div>
     )
 }
 
-export default CountryPage;
+export default inject('store')(observer(CountryPage));
