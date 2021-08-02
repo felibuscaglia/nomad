@@ -12,6 +12,7 @@ import { CommonModule } from './common/common.module';
 import { AdsModule } from './ads/ads.module';
 import { PillarsModule } from './pillars/pillars.module';
 import { CityPillarsModule } from './city-pillars/city-pillars.module';
+import { SalaryModule } from './salary/salary.module';
 
 @Module({
   imports: [
@@ -22,7 +23,8 @@ import { CityPillarsModule } from './city-pillars/city-pillars.module';
     CommonModule,
     AdsModule,
     PillarsModule,
-    CityPillarsModule
+    CityPillarsModule,
+    SalaryModule
   ],
   controllers: [AppController],
   providers: [AppService],

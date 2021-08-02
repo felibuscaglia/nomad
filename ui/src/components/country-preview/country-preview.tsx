@@ -1,5 +1,6 @@
 import { Country } from '../../shared/interfaces';
 import './country-preview.scss';
+import { Link } from 'react-router-dom';
 
 export interface CountryPreviewProps {
     country: Country;
@@ -7,12 +8,14 @@ export interface CountryPreviewProps {
 
 function CountryPreview(props: CountryPreviewProps) {
     return (
-        <div id='preview'>
-            <div id='country-image' style={{ backgroundImage: `url(${props?.country?.image})` }}></div>
-            <div>
-                <span>{props?.country?.name}</span>
+        <Link to={`/country/${props?.country?.id}`} className='links'>
+            <div id='preview'>
+                <div id='country-image' style={{ backgroundImage: `url(${props?.country?.image})` }}></div>
+                <div>
+                    <span>{props?.country?.name}</span>
+                </div>
             </div>
-        </div>
+        </Link>
     )
 }
 

@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
 import { CountriesService } from './countries.service';
 
 @Controller('countries')
@@ -10,5 +10,10 @@ export class CountriesController {
     @Get('/random')
     async getRandomCountries() {
         return await this.countriesService.getRandomCountries();
+    }
+
+    @Get('/:countryID')
+    async getCountry(@Param('countryID', ParseIntPipe) countryID: number) {
+        return await this.countriesService.getCountryById(countryID);
     }
 }

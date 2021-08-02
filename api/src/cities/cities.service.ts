@@ -4,15 +4,13 @@ import { Repository } from 'typeorm';
 import { City } from './models/city.model';
 import axios from 'axios';
 import { Country } from 'src/countries/models/country.model';
-import * as _ from 'lodash';
-import { CountriesService } from 'src/countries/countries.service';
 import { CommonService } from 'src/common/common.service';
 import { AdsService } from 'src/ads/ads.service';
 import { Ad } from 'src/ads/models/ad.model';
-import { Query, WikipediaDTO } from './dto/wikipedia.dto';
 import { TeleportDTO } from './dto/teleport.dto';
 import { PillarsService } from 'src/pillars/pillars.service';
 import { CityPillarsService } from 'src/city-pillars/city-pillars.service';
+import { CountriesService } from '../countries/countries.service';
 
 @Injectable()
 export class CitiesService {
@@ -33,7 +31,7 @@ export class CitiesService {
             country,
             rank: 0,
             voteCount: 0,
-            description: await this.getCityDescriptions(name)
+            description: await this.commonService.getWikipediaDescription(name)
         }
         console.log(`Saving new city: ${name}`);
         return this.cityRepository.save(newCity);
@@ -91,27 +89,7 @@ export class CitiesService {
         const ads = await this.adsService.getAds(page);
         const noMoreAds = ads.length < page;
 
-        return noMoreAds ? slicedCities : this.commonService.insertInArray(slicedCities, 2, _.last(ads));
-    }
-
-    async getCityDescriptions(cityName: string) {
-        try {
-            const uriEncodedCityName = encodeURI(cityName);
-            const wikipediaDTO = await axios.get<WikipediaDTO>(`https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&explaintext=1&exsentences=7&titles=${uriEncodedCityName}`);
-            if (wikipediaDTO) {
-                return this.getWikipediaDescriptionFromQuery(wikipediaDTO.data?.query);
-            }
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
-    getWikipediaDescriptionFromQuery(query: Query) {
-        if (!query) return null;
-
-        const pages = query.pages;
-        const keyPages = _.values(pages);
-        return _.first(keyPages)?.extract ?? null;
+        return noMoreAds ? slicedCities : this.commonService.insertInArray(slicedCities, 2, ads[ads.length - 1]);
     }
 
     getAllCities() {
@@ -143,5 +121,13 @@ export class CitiesService {
         } catch (err) {
             console.error(err);
         }
+    }
+
+    getCountryCapital(countryName: string, cityName: string) {
+        return this.cityRepository.createQueryBuilder('city')
+            .leftJoinAndSelect('city.country', 'country')
+            .where('city.name = :cityName', { cityName })
+            .andWhere('country.name = :countryName', { countryName })
+            .getOne()
     }
 }

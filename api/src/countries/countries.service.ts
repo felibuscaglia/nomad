@@ -1,38 +1,42 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import axios from 'axios';
-import { CommonService } from 'src/common/common.service';
+import { CommonService } from '../common/common.service';
 import { getConnection, Repository } from 'typeorm';
+import { RestCountriesDTO } from './interfaces';
 import { Country } from './models/country.model';
+import { CountryFactory } from './country.factory';
 
 @Injectable()
 export class CountriesService {
     constructor(
         @InjectRepository(Country)
         private countryRepository: Repository<Country>,
-        private readonly commonService: CommonService
+        private readonly commonService: CommonService,
+        private readonly countryFactory: CountryFactory
     ) { }
 
-    saveCountry(name: string) {
-        return this.countryRepository.insert({ name });
+    saveCountry(country: Country) {
+        console.log(`Inserting new country: ${country.name}`);
+        return this.countryRepository.save(country);
     }
 
-    findCountry(name: string) {
+    findCountryByName(name: string) {
         return this.countryRepository.findOne({ where: { name } });
     }
 
     async getAllCountriesFromAPI() {
-        const apiURL = process.env.TELEPORT_API_URL;
         try {
-            const teleportApiDTO = await axios.get(`${apiURL}/api/countries/`);
-            const allCountries = teleportApiDTO?.data?._links['country:items'];
-            const mappedCountries: Country[] = [];
-            for (const country of allCountries) {
-                const name = country.name;
-                const countryImage = await this.commonService.getImages(country.name);
-                mappedCountries.push({ name, image: countryImage });
+            const teleportApiDTO = await axios.get<RestCountriesDTO[]>('https://restcountries.com/v3/all');
+            for (const country of teleportApiDTO.data) {
+                const checkIfExists = await this.findCountryByName(country.name.common);
+                if (!checkIfExists) {
+                    const countryImage = await this.commonService.getImages(country.name.common);
+                    const countryDescription = await this.commonService.getWikipediaDescription(country.name.common);
+                    const countryToInsert = this.countryFactory.buildCountry(country, countryImage, countryDescription);
+                    await this.saveCountry(countryToInsert);
+                }
             }
-            return await this.insertMultipleCountries(mappedCountries);
         } catch (err) {
             console.error(err);
         }
@@ -60,4 +64,6 @@ export class CountriesService {
             .limit(11)
             .getMany();
     }
+
+    getCountryById = (id: number) => this.countryRepository.findOne({ where: { id } });
 }

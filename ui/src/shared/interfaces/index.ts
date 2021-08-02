@@ -25,6 +25,17 @@ export interface Country {
     id: number;
     name: string;
     image: string | null;
+    independent: boolean;
+    unMember: boolean;
+    currency: string;
+    capital: string;
+    region: string;
+    subregion: string;
+    languages: string;
+    landlocked: boolean;
+    area: number;
+    emojiFlag: string;
+    description: string;
 }
 
 export interface ReduxState {

@@ -58,7 +58,7 @@ function CityPage(props: RouteComponentProps<MatchParams>) {
     }
 
     return (
-        <div id='city-page'>
+        <div id='container'>
             <div id='first-div'>
                 <div>
                     <h1>{city?.name}</h1>

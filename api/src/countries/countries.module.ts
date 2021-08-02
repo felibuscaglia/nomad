@@ -4,11 +4,12 @@ import { CountriesController } from './countries.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Country } from './models/country.model';
 import { CommonModule } from 'src/common/common.module';
+import { CountryFactory } from './country.factory';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Country]), CommonModule],
-  providers: [CountriesService],
+  providers: [CountriesService, CountryFactory],
   controllers: [CountriesController],
-  exports: [CountriesService]
+  exports: [CountriesService, CountryFactory]
 })
 export class CountriesModule { }
