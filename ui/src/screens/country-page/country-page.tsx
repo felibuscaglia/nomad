@@ -73,7 +73,7 @@ function CountryPage(props: RouteComponentProps<MatchParams>) {
                     {country?.area?.toLocaleString()} km²
                 </div>
             </div>
-           <JobSalaryCalculator />
+           <JobSalaryCalculator countryID={countryId} countryName={country?.name} />
         </div>
     )
 }

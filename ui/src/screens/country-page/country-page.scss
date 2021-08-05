@@ -1,17 +1,3 @@
-@import '../../styles/mixins.scss';
-@import '../../styles/variables.scss';
-@import '../city-page/city-page.scss';
-
-#job-salary-title {
-    @include displayFlex(row);
-    margin-top: 50px;
-    h3 {
-        margin: 0px 20px 0px 0px;
-    }
-    select {
-        font-family: $header-font;
-        padding: 5px;
-        border: 1px solid #cacaca;
-        border-radius: 5px;
-    }
-}
+@import "../../styles/mixins.scss";
+@import "../../styles/variables.scss";
+@import "../city-page/city-page.scss";

@@ -19,4 +19,13 @@ export class SalaryCountryService {
         return this.countrySalaryRepository.save(newCountrySalary);
     }
 
+    async findJobSalaryFromCountry(jobID: string, countryID: string) {
+        return this.countrySalaryRepository.createQueryBuilder('countrySalary')
+            .leftJoin('countrySalary.job', 'job')
+            .leftJoin('countrySalary.country', 'country')
+            .where('job.id = :jobID', { jobID })
+            .andWhere('country.id = :countryID', { countryID })
+            .getOne();
+    }
+
 }

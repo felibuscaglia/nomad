@@ -1,5 +1,5 @@
 import { Job } from "../shared/interfaces";
-import { makeAutoObservable, observable } from 'mobx';
+import { makeAutoObservable } from 'mobx';
 import axios from 'axios';
 
 class Store {

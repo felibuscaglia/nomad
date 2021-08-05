@@ -67,3 +67,7 @@ export interface Job {
   id: number;
   title: string;
 }
+
+export interface CountrySalary {
+  salary: number;
+}
