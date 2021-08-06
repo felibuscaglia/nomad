@@ -1,5 +1,5 @@
-import { CountrySalary } from "../../salary-country/models/country-salary.model";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { CountrySalary } from "../../salary/models/salary.model";
+import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Country {
@@ -39,7 +39,7 @@ export class Country {
     @Column()
     area: number;
 
-    @Column()
+    @Column({ nullable: true })
     emojiFlag: string;
 
     @Column()
@@ -47,6 +47,9 @@ export class Country {
 
     @Column()
     isoCode: string;
+
+    @Column()
+    population: number;
 
     @OneToMany(type => CountrySalary, countrySalary => countrySalary.country)
     jobs?: CountrySalary[];

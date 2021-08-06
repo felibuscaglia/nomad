@@ -8,6 +8,9 @@ import { CheckCircle, Cancel, RemoveCircle, Report } from '@material-ui/icons';
 import Tooltip from '@material-ui/core/Tooltip';
 import { withStyles } from '@material-ui/core';
 import AdComponent from '../../components/homepage-ad/homepage-ad';
+import JobSalaryCalculator from '../../components/job-salary-calculator/job-salary-calculator';
+import { inject, observer } from 'mobx-react';
+import store from '../../store/store';
 
 interface MatchParams {
     cityId: string;
@@ -26,6 +29,8 @@ function CityPage(props: RouteComponentProps<MatchParams>) {
         axios.get<Ad[]>('/ads')
             .then(ads => setAds(ads.data))
             .catch(err => console.error(err));
+
+        store.getAllJobs();
     }, [cityId]);
 
     const StyledTooltip = withStyles((theme) => ({
@@ -51,8 +56,8 @@ function CityPage(props: RouteComponentProps<MatchParams>) {
     }
 
     function getIcon(score: number) {
-        if (score === 2.5) return <RemoveCircle className='neutral' />
-        else if (score > 2.5) return <CheckCircle className='check' />;
+        if (score === 5) return <RemoveCircle className='neutral' />
+        else if (score > 5) return <CheckCircle className='check' />;
         else return <Cancel className='negative' />
     }
 
@@ -69,7 +74,7 @@ function CityPage(props: RouteComponentProps<MatchParams>) {
                 </div>
                 <button><Report /> Report this city data</button>
             </div>
-            <div id='cover' style={{ backgroundImage: `url(${city?.image})` }}></div>
+            <div id='cover' style={{ backgroundImage: `url(${city?.image?.image})` }}></div>
             <h3>About {city?.name}</h3>
             <p>{city?.description}</p>
             <h3>City Pillars</h3>
@@ -84,10 +89,11 @@ function CityPage(props: RouteComponentProps<MatchParams>) {
                 })}
             </div>
             <div id='ads-wrapper'>
-                {ads?.map(ad => <AdComponent ad={ad} />)}
+                {ads?.map((ad, index) => <AdComponent ad={ad} key={index} />)}
             </div>
+            <JobSalaryCalculator entityID={cityId} entityName={city?.name} entityType={'city'} />
         </div>
     )
 }
 
-export default CityPage;
+export default inject('store')(observer(CityPage));

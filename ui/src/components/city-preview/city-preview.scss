@@ -1,5 +1,5 @@
 @import "../../styles/variables.scss";
-@import '../../styles/mixins.scss';
+@import "../../styles/mixins.scss";
 
 #city-preview {
     margin: 0px 20px 40px 20px;
@@ -10,6 +10,18 @@
         background-position: center;
         background-size: cover;
         cursor: pointer;
+        @include displayFlexJustify(flex-end);
+        div {
+            align-self: flex-end;
+            font-size: 9px;
+            text-decoration: none;
+            background: #cde1db;
+            display: inline-block;
+            opacity: 70%;
+            padding: 1px 2px;
+            border-radius: 10px;
+            margin: 0px 5px 5px 0px;
+        }
     }
     #data {
         @include displayFlexJustify(space-between, flex-start);

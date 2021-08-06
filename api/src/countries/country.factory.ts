@@ -6,7 +6,7 @@ import { Country } from "./models/country.model";
 
 export class CountryFactory {
 
-    buildCountry = (countryData: RestCountriesDTO, image: string, description: string): Country => {
+    buildCountry = (countryData: RestCountriesDTO, image: string, description: string, population: number): Country => {
         return {
             name: countryData.name.common,
             image,
@@ -21,7 +21,8 @@ export class CountryFactory {
             area: Math.round(countryData.area),
             emojiFlag: countryData.flag ?? null,
             description,
-            isoCode: countryData.cca2
+            isoCode: countryData.cca2,
+            population 
         }
     }
 }

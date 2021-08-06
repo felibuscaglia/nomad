@@ -7,10 +7,14 @@ import { Country } from 'src/countries/models/country.model';
 import { CommonService } from 'src/common/common.service';
 import { AdsService } from 'src/ads/ads.service';
 import { Ad } from 'src/ads/models/ad.model';
-import { TeleportDTO } from './dto/teleport.dto';
 import { PillarsService } from 'src/pillars/pillars.service';
 import { CityPillarsService } from 'src/city-pillars/city-pillars.service';
 import { CountriesService } from '../countries/countries.service';
+import { CityScoresDTO, TeleportCityDTO, UrbanAreasDTO } from './dto/teleport.dto';
+import { CityImagesService } from '../city-images/city-images.service';
+import { CityImage } from '../city-images/models/city-image.model';
+import { TeleportSalariesDTO } from '../countries/interfaces';
+import { SalaryService } from '../salary/salary.service';
 
 @Injectable()
 export class CitiesService {
@@ -21,60 +25,37 @@ export class CitiesService {
         private readonly commonService: CommonService,
         private readonly adsService: AdsService,
         private readonly pillarsService: PillarsService,
-        private readonly cityPillarsService: CityPillarsService
+        private readonly cityPillarsService: CityPillarsService,
+        private readonly cityImagesService: CityImagesService,
+        private readonly salaryService: SalaryService
     ) { }
 
-    async saveCity(name: string, country: Country) {
+    async saveCity(name: string, country: Country, image: CityImage) {
         const newCity: City = {
             name,
-            image: await this.commonService.getImages(name),
             country,
             rank: 0,
             voteCount: 0,
-            description: await this.commonService.getWikipediaDescription(name)
+            description: await this.commonService.getWikipediaDescription(name),
+            image
         }
         console.log(`Saving new city: ${name}`);
         return this.cityRepository.save(newCity);
     }
 
-    async getRandomCity() {
-        return this.cityRepository.createQueryBuilder('city')
-            .leftJoinAndSelect('city.country', 'country')
-            .where('city.image is not null')
-            .orderBy('RANDOM()')
-            .limit(1)
-            .getOne();
-    }
-
-    async getCitiesFromAPI(limit: number) {
-        let allCities = [];
-        const allCountries = await this.countriesService.getAllCountries();
-        const allPillars = await this.pillarsService.getAllPillars();
-        for (const country of allCountries) {
-            const citiesFromCountry = await this.getCitiesFromCountryAPI(country);
-            allCities = allCities.concat(citiesFromCountry);
-            if (allCities.length >= limit) break;
-        }
-        for (const city of allCities) {
-            const newCity = await this.saveCity(city.name, city.country);
-            for (const pillar of allPillars) {
-                await this.cityPillarsService.createRelation(newCity, pillar, 0);
-            }
-        }
-    }
-
-    async getCitiesFromCountryAPI(country: Country) {
-        const citiesFromCountry = [];
+    syncCities = async () => {
         try {
-            const teleportDTO = await axios.get(`${process.env.TELEPORT_API_URL}/api/cities/?search=${country.name}&embed=city%3Asearch-results%2Fcity%3Aitem%2Fcity`);
-            teleportDTO?.data?._embedded['city:search-results'].forEach(result => {
-                const newCity = result?._embedded ? { name: result?._embedded['city:item'].name, country } : null;
-                if (newCity) citiesFromCountry.push(newCity);
-            });
+            const teleportDTO = await axios.get<TeleportCityDTO>(`${process.env.TELEPORT_API_URL}/api/urban_areas/`);
+            for (const cityDetails of teleportDTO.data._links['ua:item']) {
+                const mainCityDTO = await axios.get<UrbanAreasDTO>(cityDetails.href);
+                const cityCountry = await this.countriesService.findCountryByName(mainCityDTO.data._links['ua:countries'][0].name);
+                const cityImage = await this.cityImagesService.saveCityImage(mainCityDTO.data._links['ua:images'].href);
+                const newCity = await this.saveCity(mainCityDTO.data.name, cityCountry, cityImage);
+                await this.getCityScores(newCity, mainCityDTO.data._links['ua:scores'].href);
+            }
         } catch (err) {
-            return [];
+            console.error(err);
         }
-        return citiesFromCountry;
     }
 
     async getCitiesWithAds(page: number): Promise<(City | Ad)[]> {
@@ -82,6 +63,7 @@ export class CitiesService {
         const paginationEnd = page * 8;
         const cities = await this.cityRepository.createQueryBuilder('city')
             .leftJoinAndSelect('city.country', 'country')
+            .leftJoinAndSelect('city.image', 'image')
             .orderBy('city.rank', 'DESC')
             .limit(paginationEnd)
             .getMany();
@@ -103,31 +85,41 @@ export class CitiesService {
     getCity(id: number) {
         return this.cityRepository.createQueryBuilder('city')
             .leftJoinAndSelect('city.country', 'country')
+            .leftJoinAndSelect('city.image', 'image')
             .leftJoinAndSelect('city.pillars', 'cityPillars')
             .leftJoinAndSelect('cityPillars.pillar', 'pillar')
             .where('cityPillars.city.id = :id', { id })
             .getOne();
     }
 
-    async getCityScores(city: City, encodedName: string) {
+    async getCityScores(city: City, href: string) {
         try {
-            const teleportDTO = await axios.get<TeleportDTO>(`${process.env.TELEPORT_API_URL}/api/urban_areas/slug:${encodedName}/scores/`);
-            if (teleportDTO) {
-                for (const category of teleportDTO.data?.categories) {
-                    const pillar = await this.pillarsService.createPillar(category.name);
-                    await this.cityPillarsService.createRelation(city, pillar, category.score_out_of_10);
-                }
+            const cityScoresDTO = await axios.get<CityScoresDTO>(href);
+            for (const category of cityScoresDTO.data.categories) {
+                const pillar = await this.pillarsService.createPillar(category.name);
+                await this.cityPillarsService.createRelation(city, pillar, category.score_out_of_10);
+                await this.updateCity({
+                    ...city,
+                    rank: Math.round(cityScoresDTO?.data?.teleport_city_score / 10) ?? 0,
+                    voteCount: 1
+                })
             }
         } catch (err) {
             console.error(err);
         }
     }
 
-    getCountryCapital(countryName: string, cityName: string) {
-        return this.cityRepository.createQueryBuilder('city')
-            .leftJoinAndSelect('city.country', 'country')
-            .where('city.name = :cityName', { cityName })
-            .andWhere('country.name = :countryName', { countryName })
-            .getOne()
+    syncCitySalaries = async (city: City) => {
+        const encodedName = city.name.split(' ').join('-').toLowerCase();
+        try {
+            const salaryDTO = await axios.get<TeleportSalariesDTO>(`${process.env.TELEPORT_API_URL}/api/urban_areas/slug:${encodedName}/salaries/`);
+            if (salaryDTO) {
+                for (const jobData of salaryDTO?.data?.salaries) {
+                    await this.salaryService.saveCitySalary(jobData, city);
+                }
+            }
+        } catch(err) {
+            console.error(err.response.data);
+        }
     }
 }

@@ -6,7 +6,7 @@ import { getConnection, Repository } from 'typeorm';
 import { RestCountriesDTO, TeleportSalariesDTO } from './interfaces';
 import { Country } from './models/country.model';
 import { CountryFactory } from './country.factory';
-import { SalaryCountryService } from '../salary-country/salary-country.service';
+import { SalaryService } from '../salary/salary.service';
 
 @Injectable()
 export class CountriesService {
@@ -15,7 +15,7 @@ export class CountriesService {
         private countryRepository: Repository<Country>,
         private readonly commonService: CommonService,
         private readonly countryFactory: CountryFactory,
-        private readonly countrySalaryService: SalaryCountryService
+        private readonly salaryService: SalaryService
     ) { }
 
     saveCountry(country: Country) {
@@ -35,7 +35,8 @@ export class CountriesService {
                 if (!checkIfExists) {
                     const countryImage = await this.commonService.getImages(country.name.common);
                     const countryDescription = await this.commonService.getWikipediaDescription(country.name.common);
-                    const countryToInsert = this.countryFactory.buildCountry(country, countryImage, countryDescription);
+                    const countryPopulation = await this.getCountryPopulation(country.cca2);
+                    const countryToInsert = this.countryFactory.buildCountry(country, countryImage, countryDescription, countryPopulation);
                     await this.saveCountry(countryToInsert);
                 }
             }
@@ -74,10 +75,19 @@ export class CountriesService {
             const countrySalaryDTO = await axios.get<TeleportSalariesDTO>(`https://api.teleport.org/api/countries/iso_alpha2:${country.isoCode}/salaries/`);
             if (countrySalaryDTO) {
                 for (const jobData of countrySalaryDTO?.data?.salaries) {
-                    await this.countrySalaryService.saveCountrySalary(jobData, country);
+                    await this.salaryService.saveCountrySalary(jobData, country);
                 }
             }
         } catch (err) {
+            console.error(err);
+        }
+    }
+
+    getCountryPopulation = async (isoCode: string) => {
+        try {
+            const countryDTO = await axios.get<{ population: number }>(`https://api.teleport.org/api/countries/iso_alpha2:${isoCode}/`);
+            return countryDTO.data.population;
+        } catch(err) {
             console.error(err);
         }
     }

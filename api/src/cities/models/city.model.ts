@@ -1,6 +1,8 @@
-import { CityPillars } from "src/city-pillars/models/city-pillars.model";
-import { Country } from "src/countries/models/country.model";
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { CityImage } from "../../city-images/models/city-image.model";
+import { CityPillars } from "../../city-pillars/models/city-pillars.model";
+import { Country } from "../../countries/models/country.model";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { CitySalary } from "../../salary/models/salary.model";
 
 @Entity()
 export class City {
@@ -9,9 +11,6 @@ export class City {
 
     @Column()
     name: string;
-
-    @Column({ nullable: true })
-    image: string;
 
     @Column({ default: 0 })
     rank: number;
@@ -28,4 +27,11 @@ export class City {
 
     @OneToMany(type => CityPillars, cityPillars => cityPillars.city)
     pillars?: CityPillars[];
+
+    @OneToOne(() => CityImage)
+    @JoinColumn({ name: 'image_id' })
+    image: CityImage;
+
+    @OneToMany(type => CitySalary, countrySalary => countrySalary.city)
+    jobs?: CitySalary[];
 }

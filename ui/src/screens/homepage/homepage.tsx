@@ -4,7 +4,6 @@ import MapIcon from '@material-ui/icons/Map';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Ad, City, Country } from '../../shared/interfaces';
-import RoomIcon from '@material-ui/icons/Room';
 import CountryPreview from '../../components/country-preview/country-preview';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import CityPreview from '../../components/city-preview/city-preview';
@@ -12,17 +11,12 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import HomepageAd from '../../components/homepage-ad/homepage-ad';
 
 function Homepage() {
-    const [mainCity, setMainCity] = useState<City>({} as City);
     const [countries, setCountries] = useState<Country[]>([]);
     const [cityPage, setCityPage] = useState(1);
     const [cities, setCities] = useState<(City | Ad)[]>([]);
     const [hasMore, setHasMore] = useState(true);
 
     useEffect(() => {
-        axios.get('/cities/gallery')
-            .then(cities => setMainCity(cities.data))
-            .catch(err => console.error(err));
-
         axios.get('/countries/random')
             .then(countries => setCountries(countries.data))
             .catch(err => console.error(err));
@@ -61,10 +55,8 @@ function Homepage() {
                     </p>
                     <button id='nearby-btn'><MapIcon /><span>See nearby destinations</span></button>
                 </div>
-                <div id='image-div'>
-                    <div id='city-image' style={{ backgroundImage: `url(${mainCity?.image})` }}></div>
-                    <span id='location'><RoomIcon id='room-icon' /><b>{mainCity?.name}</b>, {mainCity?.country?.name}</span>
-                </div>
+                    <div id='cover'></div>
+                
             </div>
             <div id='countries'>
                 <h3>Explore cities by country</h3>

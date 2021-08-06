@@ -5,30 +5,12 @@
     display: flex;
     align-items: center;
     width: 100%;
-    #image-div {
-        @include displayFlex(column);
-    }
-    #city-image {
+    #cover {
         height: 470px;
-        width: 696px;
+        min-width: 696px;
         background-position: center;
         background-size: cover;
-    }
-    #location {
-        margin: 14px 12px 14px 0px;
-        display: flex;
-        align-items: center;
-        font-family: $header-font;
-        font-size: 15px;
-        align-self: flex-end;
-        font-weight: 300;
-        #room-icon {
-            margin-right: 5px;
-            font-size: 20px;
-        }
-        b {
-            font-weight: 500;
-        }
+        background-image: url(https://images.unsplash.com/photo-1572511443032-a3cfe6823872?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1351&q=80);
     }
     #intro {
         width: 50%;

@@ -1,21 +1,42 @@
-export interface TeleportDTO {
-    _links: Links;
-    categories: Category[];
-    summary: string;
-    teleport_city_score: number;
-}
-
-interface Links {
-    curies: Cury[];
-    self: {
-        href: string;
+export interface TeleportCityDTO {
+    _links: {
+        'ua:item': UALinks[]
     }
 }
 
-interface Cury {
-    href: string;
+export interface UrbanAreasDTO {
+    _links: {
+        'ua:details': UALinks,
+        'ua:images': UALinks,
+        'ua:salaries': UALinks,
+        'ua:scores': UALinks,
+        'ua:countries': { href: string; name: string } []
+    }
     name: string;
-    templated: boolean;
+}
+
+export interface UrbanAreaImagesDTO {
+    photos: Photo[]
+}
+
+interface Photo {
+    attribution: {
+        photographer: string;
+        site: string;
+    }
+    image: {
+        web: string;
+    }
+}
+
+interface UALinks {
+    href: string
+}
+
+
+export interface CityScoresDTO {
+    categories: Category[];
+    teleport_city_score: number;
 }
 
 export interface Category {

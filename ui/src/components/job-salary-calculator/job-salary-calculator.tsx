@@ -2,12 +2,13 @@ import './job-salary-calculator.scss';
 import store from '../../store/store';
 import axios from 'axios';
 import React, { useState } from 'react';
-import { CountrySalary } from '../../shared/interfaces';
+import { Salary } from '../../shared/interfaces';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 interface JobSalaryCalculatorProps {
-    countryID: string;
-    countryName: string;
+    entityID: string;
+    entityName: string;
+    entityType: string;
 }
 
 function JobSalaryCalculator(props: JobSalaryCalculatorProps) {
@@ -22,17 +23,19 @@ function JobSalaryCalculator(props: JobSalaryCalculatorProps) {
         const [id, title] = e.target.value.split(',');
         getJobSalary(id, title);
     }
-    
+
     function getJobSalary(id: string, title: string) {
         setJob(title);
-        if (!id || !title || !props?.countryID) return setSalary(null);
+        if (!id || !title || !props?.entityID) return setSalary(null);
 
-        axios.get<CountrySalary>(`salary-country/?jobID=${id}&countryID=${props.countryID}`)
-            .then(salaryDTO => {
-                setSalary(salaryDTO?.data?.salary ?? null);
-                setLoading(false);
-            })
-            .catch(err => console.error(err));
+        axios.get<Salary>(`salary/?jobID=${id}&entityID=${props?.entityID}&entityType=${props?.entityType}`)
+            .then(salaryDTO => setSalaryAndStopLoading(salaryDTO?.data?.salary ?? null))
+            .catch(err => setSalaryAndStopLoading(null));
+    }
+
+    function setSalaryAndStopLoading(value: number | null) {
+        setSalary(value);
+        setLoading(false);
     }
 
 
@@ -55,8 +58,8 @@ function JobSalaryCalculator(props: JobSalaryCalculatorProps) {
                     loading ?
                         <CircularProgress /> :
                         <React.Fragment>
-                            <h1>{salary === null ? 'N/A' : `U$D ${ salary?.toLocaleString()}`}</h1>
-                            <span>Average annual salary for a(n) <b>{job}</b> in <b>{props?.countryName}</b></span>
+                            <h1>{salary === null ? 'N/A' : `U$D ${salary?.toLocaleString()}`}</h1>
+                            <span>Average annual salary for a(n) <b>{job}</b> in <b>{props?.entityName}</b></span>
                         </React.Fragment>
                 }
             </div>

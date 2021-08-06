@@ -3,7 +3,7 @@ import * as H from "history";
 export interface City {
     id: number;
     name: string;
-    image: string;
+    image: Photo;
     country: Country;
     rank: number;
     voteCount: number;
@@ -36,6 +36,14 @@ export interface Country {
     area: number;
     emojiFlag: string;
     description: string;
+    population: number;
+}
+
+interface Photo {
+    id: number;
+    photographer: string;
+    site: string;
+    image: string;
 }
 
 export interface ReduxState {
@@ -68,6 +76,6 @@ export interface Job {
   title: string;
 }
 
-export interface CountrySalary {
+export interface Salary {
   salary: number;
 }

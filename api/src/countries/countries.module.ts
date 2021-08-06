@@ -5,10 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Country } from './models/country.model';
 import { CommonModule } from 'src/common/common.module';
 import { CountryFactory } from './country.factory';
-import { SalaryCountryModule } from '../salary-country/salary-country.module';
+import { SalaryModule } from '../salary/salary.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Country]), CommonModule, SalaryCountryModule],
+  imports: [TypeOrmModule.forFeature([Country]), CommonModule, SalaryModule],
   providers: [CountriesService, CountryFactory],
   controllers: [CountriesController],
   exports: [CountriesService, CountryFactory]

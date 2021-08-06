@@ -12,7 +12,11 @@ function CityPreview(props: CityPreviewProps) {
 
     return (
         <div id='city-preview'>
-            <Link to={`/city/${props?.city?.id}`}><div id='image' style={{ backgroundImage: `url(${props?.city?.image})` }}></div></Link>
+            <Link className='links' to={`/city/${props?.city?.id}`}>
+                <div id='image' style={{ backgroundImage: `url(${props?.city?.image?.image})` }}>
+                        <div>© {props?.city?.image?.photographer} / {props?.city?.image?.site}</div>
+                </div>
+            </Link>
             <div id='data'>
                 <div id='names'>
                     <Link id='link' to={`/city/${props?.city?.id}`}><h3>{props?.city?.name}</h3></Link>

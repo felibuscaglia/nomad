@@ -2,11 +2,12 @@ import { Injectable } from "@nestjs/common";
 import { Country } from "src/countries/models/country.model";
 import { JobService } from "../job/job.service";
 import { JobData } from "../countries/interfaces";
-import { CountrySalary } from "./models/country-salary.model";
+import { CitySalary, CountrySalary } from "./models/salary.model";
+import { City } from "../cities/models/city.model";
 
 @Injectable()
 
-export class CountrySalaryFactory {
+export class SalaryFactory {
 
     constructor(
         private readonly jobService: JobService
@@ -16,6 +17,14 @@ export class CountrySalaryFactory {
         return {
             salary: Math.round(jobData.salary_percentiles.percentile_50),
             country,
+            job: await this.findOrCreateJob(jobData.job.title)
+        };
+    }
+
+    buildCitySalary = async (jobData: JobData, city: City): Promise<CitySalary> => {
+        return {
+            salary: Math.round(jobData.salary_percentiles.percentile_50),
+            city,
             job: await this.findOrCreateJob(jobData.job.title)
         };
     }

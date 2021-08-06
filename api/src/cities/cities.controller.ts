@@ -9,11 +9,6 @@ export class CitiesController {
         private readonly citiesService: CitiesService
     ) { }
 
-    @Get('/gallery')
-    async getRandomCities() {
-        return await this.citiesService.getRandomCity();
-    }
-
     @Get('/')
     async getCities(@Query('page') page: string): Promise<(City | Ad)[]> {
         return await this.citiesService.getCitiesWithAds(Number(page));
