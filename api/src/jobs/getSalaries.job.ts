@@ -3,6 +3,7 @@ import { CountriesService } from '../countries/countries.service';
 import { AppModule } from '../app.module';
 import { SalaryService } from '../salary/salary.service';
 import { CitiesService } from '../cities/cities.service';
+const prompt = require('prompt');
 
 
 async function runAsync() {

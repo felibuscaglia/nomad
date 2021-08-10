@@ -11,6 +11,7 @@ import AdComponent from '../../components/homepage-ad/homepage-ad';
 import JobSalaryCalculator from '../../components/job-salary-calculator/job-salary-calculator';
 import { inject, observer } from 'mobx-react';
 import store from '../../store/store';
+import SubPillarPopup from '../../components/sub-pillar-popup/sub-pillar-popup';
 
 interface MatchParams {
     cityId: string;
@@ -20,6 +21,7 @@ function CityPage(props: RouteComponentProps<MatchParams>) {
     const { cityId } = props.match.params;
     const [city, setCity] = useState<City>({} as City);
     const [ads, setAds] = useState<Ad[]>([]);
+    const [dialogOpen, setDialogOpen] = useState(false);
 
     useEffect(() => {
         axios.get<City>(`/cities/${cityId}`)
@@ -45,20 +47,12 @@ function CityPage(props: RouteComponentProps<MatchParams>) {
         else if (index === city?.pillars?.length - 2) return 'last';
     }
 
-    function getIconAndTooltip(cityPillar: CityPillars) {
-        const score = cityPillar?.score / cityPillar?.voteCount;
-        if (isNaN(score)) return 'N/A';
-        else return (
-            <StyledTooltip title={`${score} ${score === 1 ? 'point' : 'points'} out of ${cityPillar?.voteCount} votes received.`} placement='top'>
-                {getIcon(score)}
-            </StyledTooltip>
-        )
-    }
-
     function getIcon(score: number) {
-        if (score === 5) return <RemoveCircle className='neutral' />
-        else if (score > 5) return <CheckCircle className='check' />;
-        else return <Cancel className='negative' />
+        const handleDialog = () => setDialogOpen(!dialogOpen);
+
+        if (score === 5) return <RemoveCircle onClick={ handleDialog } className='neutral' />
+        else if (score > 5) return <CheckCircle onClick={ handleDialog } className='check' />;
+        else return <Cancel onClick={ handleDialog } className='negative' />
     }
 
     return (
@@ -83,11 +77,14 @@ function CityPage(props: RouteComponentProps<MatchParams>) {
                     return (
                         <div className='pillar' id={getID(index)} key={index}>
                             <span>{cityPillar.pillar?.name}</span>
-                            {getIconAndTooltip(cityPillar)}
+                            <StyledTooltip title={'🔍 Details'} placement='top'>
+                                {getIcon(cityPillar.score)}
+                            </StyledTooltip>
                         </div>
                     )
                 })}
             </div>
+            <SubPillarPopup open={dialogOpen} />
             <div id='ads-wrapper'>
                 {ads?.map((ad, index) => <AdComponent ad={ad} key={index} />)}
             </div>

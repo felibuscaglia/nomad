@@ -110,7 +110,7 @@ export class CitiesService {
     }
 
     syncCitySalaries = async (city: City) => {
-        const encodedName = city.name.split(' ').join('-').toLowerCase();
+        const encodedName = this.commonService.encodeNameForTeleport(city.name);
         try {
             const salaryDTO = await axios.get<TeleportSalariesDTO>(`${process.env.TELEPORT_API_URL}/api/urban_areas/slug:${encodedName}/salaries/`);
             if (salaryDTO) {
@@ -118,7 +118,7 @@ export class CitiesService {
                     await this.salaryService.saveCitySalary(jobData, city);
                 }
             }
-        } catch(err) {
+        } catch (err) {
             console.error(err.response.data);
         }
     }

@@ -19,4 +19,6 @@ export class PillarsService {
     getAllPillars() {
         return this.pillarsRepository.find();
     }
+
+    findByName = (name: string) => this.pillarsRepository.findOne({ where: { name } })
 }

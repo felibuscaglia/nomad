@@ -82,12 +82,15 @@
             @include displayFlexJustify(space-between);
             .check {
                 color: green;
+                cursor: pointer;
             }
             .negative {
                 color: red;
+                cursor: pointer;
             }
             .neutral {
                 color: #ffe203;
+                cursor: pointer;
             }
         }
     }

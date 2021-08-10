@@ -25,7 +25,7 @@ export class Country {
     capital: string;
 
     @Column()
-    region: string; // For now it's the way to go. Maybe if I start ranking countries we could change this and also rank (sub)regions
+    region: string; // For now it's the way to go. Maybe if I start ranking countries I could change this and also rank (sub)regions
 
     @Column({ nullable: true })
     subregion: string;

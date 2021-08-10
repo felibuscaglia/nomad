@@ -42,4 +42,6 @@ export class CommonService {
         const keyPages = Object.values(pages);
         return keyPages[0]?.extract ?? null;
     }
+
+    encodeNameForTeleport = (name: string) => name.split(' ').join('-').toLowerCase();
 }

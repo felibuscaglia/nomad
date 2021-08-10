@@ -13,6 +13,7 @@ import { CityPillarsModule } from './city-pillars/city-pillars.module';
 import { JobModule } from './job/job.module';
 import { SalaryModule } from './salary/salary.module';
 import { CityImagesModule } from './city-images/city-images.module';
+import { SubPillarsModule } from './sub-pillars/sub-pillars.module';
 
 @Module({
   imports: [
@@ -26,7 +27,8 @@ import { CityImagesModule } from './city-images/city-images.module';
     CityPillarsModule,
     JobModule,
     SalaryModule,
-    CityImagesModule
+    CityImagesModule,
+    SubPillarsModule
   ],
   controllers: [AppController],
   providers: [AppService],

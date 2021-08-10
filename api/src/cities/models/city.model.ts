@@ -3,6 +3,7 @@ import { CityPillars } from "../../city-pillars/models/city-pillars.model";
 import { Country } from "../../countries/models/country.model";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { CitySalary } from "../../salary/models/salary.model";
+import { SubPillar } from "../../sub-pillars/models/sub-pillars.model";
 
 @Entity()
 export class City {
@@ -21,6 +22,24 @@ export class City {
     @Column({ nullable: true })
     description: string;
 
+    @Column({ nullable: true })
+    population?: number;
+
+    @Column({ nullable: true, type: 'decimal' })
+    weatherAverageHigh?: number;
+
+    @Column({ nullable: true, type: 'decimal' })
+    weatherAverageLow?: number;
+
+    @Column({ nullable: true, type: 'decimal' })
+    avgDayLength?: number;
+
+    @Column({ nullable: true })
+    weatherType?: string;
+
+    @Column({ nullable: true, type: 'decimal' })
+    rainyDaysPerYear?: number
+
     @ManyToOne(type => Country)
     @JoinColumn({ name: 'country_id' })
     country: Country;
@@ -34,4 +53,7 @@ export class City {
 
     @OneToMany(type => CitySalary, countrySalary => countrySalary.city)
     jobs?: CitySalary[];
+
+    @OneToMany(type => SubPillar, subPillar => subPillar.city)
+    cities?: SubPillar[];
 }

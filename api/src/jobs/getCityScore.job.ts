@@ -1,17 +1,21 @@
 import { NestFactory } from '@nestjs/core';
-import { CitiesService } from 'src/cities/cities.service';
+import { CitiesService } from '../cities/cities.service';
+import { SubPillarsService } from '../sub-pillars/sub-pillars.service';
 import { AppModule } from '../app.module';
 
 
-async function runAsync(id: number) {
+async function runAsync() {
     const app = await NestFactory.create(AppModule);
     const citiesService = app.get(CitiesService);
+    const subPillarsService = app.get(SubPillarsService);
 
-    const city = await citiesService.getCity(id);
-    await citiesService.getCityScores(city, 'bangkok');
+    const allCities = await citiesService.getAllCities();
+    for (const city of allCities) {
+        await subPillarsService.getCityDetails(city);
+    }
 
     process.exit();
 }
 
 
-runAsync(4948);
+runAsync();
