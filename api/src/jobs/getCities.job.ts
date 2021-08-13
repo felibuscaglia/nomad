@@ -7,7 +7,7 @@ async function runAsync() {
     const app = await NestFactory.create(AppModule);
     const citiesService = app.get(CitiesService);
 
-    await citiesService.syncCities();
+    await citiesService.syncCities(); // TODO: Add Climate and city size from details.
 
     process.exit();
 }

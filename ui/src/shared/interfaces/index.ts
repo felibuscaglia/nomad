@@ -79,3 +79,10 @@ export interface Job {
 export interface Salary {
   salary: number;
 }
+
+export interface SubPillar {
+    id: number;
+    name: string;
+    value: string;
+    type: string;
+}

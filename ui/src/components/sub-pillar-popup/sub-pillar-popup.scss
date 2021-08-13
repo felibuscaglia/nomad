@@ -1,0 +1,31 @@
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
+
+#dialog {
+    font-family: $header-font;
+    text-align: center;
+    #star-icon {
+        color: #FBB400;
+    }
+    #teleport-data {
+        @include displayFlexJustify(space-between);
+        padding: 10px;
+        a {
+            @include links(black);
+            @include displayFlex(row);
+            span {
+                font-size: 12px;
+                font-weight: lighter;
+                font-style: italic;
+                margin-left: 5px;
+            }
+        }
+        .close-btn {
+            align-self: flex-end;
+            cursor: pointer;
+        }
+    }
+    #subpillar-value {
+        font-weight: 200;
+    }
+}

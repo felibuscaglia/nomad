@@ -1,4 +1,3 @@
-import * as React from 'react';
 import './search-bar.scss';
 
 function SearchBar() {

@@ -58,7 +58,7 @@ function JobSalaryCalculator(props: JobSalaryCalculatorProps) {
                     loading ?
                         <CircularProgress /> :
                         <React.Fragment>
-                            <h1>{salary === null ? 'N/A' : `U$D ${salary?.toLocaleString()}`}</h1>
+                            <h1>{salary === null ? 'N/A' : `U$D ${salary?.toLocaleString()}`}</h1> 
                             <span>Average annual salary for a(n) <b>{job}</b> in <b>{props?.entityName}</b></span>
                         </React.Fragment>
                 }

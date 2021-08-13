@@ -77,7 +77,7 @@
     font-weight: 300;
 }
 
-@mixin display-grid ($columns) {
+@mixin display-grid($columns) {
     display: grid;
     grid-template-columns: repeat($columns, minmax(0, 1fr));
 }

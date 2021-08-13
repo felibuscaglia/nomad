@@ -66,7 +66,8 @@ function Homepage() {
             </div>
             <div id='around-the-world'>
                 <h3>Cities around the world</h3>
-                <button><FilterListIcon /> <span>Filter</span></button>
+                <button><FilterListIcon /> <span>Filter</span></button> 
+                {/* TODO: Make this work */}
                 <InfiniteScroll
                     dataLength={cities?.length}
                     next={fetchData}

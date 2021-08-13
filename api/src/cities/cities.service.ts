@@ -37,7 +37,7 @@ export class CitiesService {
             rank: 0,
             voteCount: 0,
             description: await this.commonService.getWikipediaDescription(name),
-            image
+            image // TODO: Define a default image?
         }
         console.log(`Saving new city: ${name}`);
         return this.cityRepository.save(newCity);

@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { Ad, City, CityPillars, RouteComponentProps } from '../../shared/interfaces';
+import { Ad, City, CityPillars, Pillar, RouteComponentProps, SubPillar } from '../../shared/interfaces';
 import './city-page.scss';
 import StarIcon from '@material-ui/icons/Star';
-import { getCityRatingForPage } from '../../shared/utils';
+import { getCityRatingForPage, getPillarIcon } from '../../shared/utils';
 import { CheckCircle, Cancel, RemoveCircle, Report } from '@material-ui/icons';
 import Tooltip from '@material-ui/core/Tooltip';
 import { withStyles } from '@material-ui/core';
@@ -22,6 +22,8 @@ function CityPage(props: RouteComponentProps<MatchParams>) {
     const [city, setCity] = useState<City>({} as City);
     const [ads, setAds] = useState<Ad[]>([]);
     const [dialogOpen, setDialogOpen] = useState(false);
+    const [subPillars, setSubPillars] = useState<SubPillar[]>([]);
+    const [selectedPillar, setSelectedPillar] = useState<CityPillars>({} as CityPillars);
 
     useEffect(() => {
         axios.get<City>(`/cities/${cityId}`)
@@ -42,17 +44,25 @@ function CityPage(props: RouteComponentProps<MatchParams>) {
         },
     }))(Tooltip);
 
-    function getID(index: number) {
+    function getID(index: number): string | undefined {
         if (index === 1) return 'first';
         else if (index === city?.pillars?.length - 2) return 'last';
     }
 
-    function getIcon(score: number) {
-        const handleDialog = () => setDialogOpen(!dialogOpen);
+    function getIcon(cityPillar: CityPillars) {
+        if (cityPillar.score === 5) return <RemoveCircle onClick={() => setPillarDetails(cityPillar)} className='neutral' />
+        else if (cityPillar.score > 5) return <CheckCircle onClick={() => setPillarDetails(cityPillar)} className='check' />;
+        else return <Cancel onClick={() => setPillarDetails(cityPillar)} className='negative' />
+    }
 
-        if (score === 5) return <RemoveCircle onClick={ handleDialog } className='neutral' />
-        else if (score > 5) return <CheckCircle onClick={ handleDialog } className='check' />;
-        else return <Cancel onClick={ handleDialog } className='negative' />
+    function setPillarDetails(cityPillar: CityPillars) {
+        const pillar = cityPillar.pillar;
+        setDialogOpen(true);
+        setSelectedPillar(cityPillar);
+
+        axios.get<SubPillar[]>(`/sub-pillars/${cityId}/${pillar.id}`)
+            .then(subPillarsDTO => setSubPillars(subPillarsDTO.data))
+            .catch(err => console.error(err));
     }
 
     return (
@@ -76,15 +86,15 @@ function CityPage(props: RouteComponentProps<MatchParams>) {
                 {city?.pillars?.map((cityPillar, index) => {
                     return (
                         <div className='pillar' id={getID(index)} key={index}>
-                            <span>{cityPillar.pillar?.name}</span>
+                            <span>{getPillarIcon(cityPillar.pillar?.name)} {cityPillar.pillar?.name}</span>
                             <StyledTooltip title={'🔍 Details'} placement='top'>
-                                {getIcon(cityPillar.score)}
+                                {getIcon(cityPillar)}
                             </StyledTooltip>
                         </div>
                     )
                 })}
             </div>
-            <SubPillarPopup open={dialogOpen} />
+            <SubPillarPopup open={dialogOpen} subPillars={subPillars} cityPillar={selectedPillar} onClose={() => setDialogOpen(false)} getID={getID} />
             <div id='ads-wrapper'>
                 {ads?.map((ad, index) => <AdComponent ad={ad} key={index} />)}
             </div>

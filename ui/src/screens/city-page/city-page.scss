@@ -71,31 +71,32 @@
         #last {
             border-bottom-left-radius: 10px;
         }
-        .pillar {
-            span {
-                font-weight: 500;
-            }
-            font-weight: 200;
-            padding: 10px 20px;
-            border-bottom: 1px solid #eeeeee;
-            border-right: 1px solid #eeeeee;
-            @include displayFlexJustify(space-between);
-            .check {
-                color: green;
-                cursor: pointer;
-            }
-            .negative {
-                color: red;
-                cursor: pointer;
-            }
-            .neutral {
-                color: #ffe203;
-                cursor: pointer;
-            }
-        }
     }
     #ads-wrapper {
         @include display-grid(3);
         margin-top: 75px;
+    }
+}
+
+.pillar {
+    span {
+        font-weight: 500;
+    }
+    font-weight: 200;
+    padding: 10px 20px;
+    border-bottom: 1px solid #eeeeee;
+    border-right: 1px solid #eeeeee;
+    @include displayFlexJustify(space-between);
+    .check {
+        color: green;
+        cursor: pointer;
+    }
+    .negative {
+        color: red;
+        cursor: pointer;
+    }
+    .neutral {
+        color: #ffe203;
+        cursor: pointer;
     }
 }
