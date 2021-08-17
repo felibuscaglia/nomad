@@ -20,5 +20,8 @@ export class PillarsService {
         return this.pillarsRepository.find();
     }
 
-    findByName = (name: string) => this.pillarsRepository.findOne({ where: { name } })
+    findOrCreate = async (name: string) => {
+        const checkIfExists = await this.pillarsRepository.findOne({ where: { name } });
+        return checkIfExists ?? await this.createPillar(name);
+    }
 }

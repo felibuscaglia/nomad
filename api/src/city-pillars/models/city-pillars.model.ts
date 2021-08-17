@@ -7,9 +7,6 @@ export class CityPillars {
     @Column()
     score: number;
 
-    @Column()
-    voteCount: number;
-
     @ManyToOne(type => City, city => city.pillars, { primary: true })
     city: City;
 

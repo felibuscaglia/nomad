@@ -16,9 +16,6 @@ export class City {
     @Column({ default: 0 })
     rank: number;
 
-    @Column({ default: 0 })
-    voteCount: number;
-
     @Column({ nullable: true })
     description: string;
 

@@ -16,7 +16,6 @@ export class CityPillarsService {
 
         const newRelation: CityPillars = {
             score: Math.round(score),
-            voteCount: score === 0 ? 0 : 1,
             city,
             pillar
         };

@@ -6,7 +6,6 @@ export interface City {
     image: Photo;
     country: Country;
     rank: number;
-    voteCount: number;
     description: string;
     pillars: CityPillars[];
 }
@@ -14,7 +13,6 @@ export interface City {
 export interface CityPillars {
   pillar: Pillar;
   score: number;
-  voteCount: number;
 }
 
 export interface Pillar {
@@ -85,4 +83,8 @@ export interface SubPillar {
     name: string;
     value: string;
     type: string;
+}
+
+export interface QueryResults {
+  name: string;
 }

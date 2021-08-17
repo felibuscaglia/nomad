@@ -6,11 +6,11 @@
     border-bottom: 1px solid #FAFAFA;
     @include displayFlex(row);
     justify-content: space-between;
-    div {
+    .header-div {
+        @include displayFlex(row);
         #link {
             @include links(black);
         }
-        @include displayFlex(row);
         .logo {
             font-size: 30px;
         }

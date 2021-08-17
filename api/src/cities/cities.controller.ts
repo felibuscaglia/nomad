@@ -14,8 +14,13 @@ export class CitiesController {
         return await this.citiesService.getCitiesWithAds(Number(page));
     }
 
-    @Get(':cityId')
+    @Get('/:cityId')
     async getCity(@Param('cityId', ParseIntPipe) cityId: number) {
         return await this.citiesService.getCity(cityId);
+    }
+
+    @Get('/search/city')
+    async search(@Query('query') query: string) {
+        return await this.citiesService.queryCitiesAndCountries(query);
     }
 }

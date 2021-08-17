@@ -3,24 +3,22 @@ import './homepage.scss';
 import MapIcon from '@material-ui/icons/Map';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Ad, City, Country } from '../../shared/interfaces';
+import { Ad, City } from '../../shared/interfaces';
 import CountryPreview from '../../components/country-preview/country-preview';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import CityPreview from '../../components/city-preview/city-preview';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import HomepageAd from '../../components/homepage-ad/homepage-ad';
+import { inject, observer } from 'mobx-react';
+import store from '../../store/store';
 
 function Homepage() {
-    const [countries, setCountries] = useState<Country[]>([]);
     const [cityPage, setCityPage] = useState(1);
     const [cities, setCities] = useState<(City | Ad)[]>([]);
     const [hasMore, setHasMore] = useState(true);
 
     useEffect(() => {
-        axios.get('/countries/random')
-            .then(countries => setCountries(countries.data))
-            .catch(err => console.error(err));
-
+        store.getCountriesForHomepage();
         getCities();
     }, []);
 
@@ -61,13 +59,12 @@ function Homepage() {
             <div id='countries'>
                 <h3>Explore cities by country</h3>
                 <div id='country-preview-container'>
-                    {countries.map((country, index) => <CountryPreview country={country} key={index} />)}
+                    {store.countriesForHomepage && store.countriesForHomepage.map((country, index) => <CountryPreview country={country} key={index} />)}
                 </div>
             </div>
             <div id='around-the-world'>
                 <h3>Cities around the world</h3>
                 <button><FilterListIcon /> <span>Filter</span></button> 
-                {/* TODO: Make this work */}
                 <InfiniteScroll
                     dataLength={cities?.length}
                     next={fetchData}
@@ -86,4 +83,4 @@ function Homepage() {
     )
 }
 
-export default Homepage;
+export default inject('store')(observer(Homepage));

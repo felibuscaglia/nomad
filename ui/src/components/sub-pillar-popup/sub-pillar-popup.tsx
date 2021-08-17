@@ -26,7 +26,7 @@ function SubPillarPopup(props: SubPillarProps) {
                 const numberValue = Number(subPillar.value);
                 return `${(numberValue * 100).toFixed(2)} %`;
             case 'float':
-                const nonFloatPillars = ['years', 'meters', 'Mbps'];
+                const nonFloatPillars = ['years', 'meters', 'Mbps', 'US dollar'];
                 const nonFloatPillarCheck = nonFloatPillars.some(name => subPillar?.name?.includes(name));
                 if (nonFloatPillarCheck) {
                     return Math.round(Number(subPillar.value));
@@ -44,7 +44,7 @@ function SubPillarPopup(props: SubPillarProps) {
     }
 
     function getDialogWidth() {
-        if (pillar?.name === 'Tolerance' || pillar?.name === 'Taxation') return 'md';
+        if (pillar?.name === 'Tolerance' || pillar?.name === 'Taxation' || pillar?.name === 'Job Market') return 'md';
         else return 'sm';
     }
 

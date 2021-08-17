@@ -2,7 +2,7 @@ export interface CityDetailsDTO {
     categories: CityDetailsCategory[];
 }
 
-interface CityDetailsCategory {
+export interface CityDetailsCategory {
     data: SubPillarDTO[];
     id: string;
     label: string

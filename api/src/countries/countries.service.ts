@@ -87,8 +87,14 @@ export class CountriesService {
         try {
             const countryDTO = await axios.get<{ population: number }>(`https://api.teleport.org/api/countries/iso_alpha2:${isoCode}/`);
             return countryDTO.data.population;
-        } catch(err) {
+        } catch (err) {
             console.error(err);
         }
+    }
+
+    queryCountries = async (query: string) => {
+        return await this.countryRepository.createQueryBuilder('country')
+            .where("LOWER(country.name) LIKE :name", { name: `%${query.toLowerCase()}%` })
+            .getMany();
     }
 }

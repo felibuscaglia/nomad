@@ -15,6 +15,7 @@ import { CityImagesService } from '../city-images/city-images.service';
 import { CityImage } from '../city-images/models/city-image.model';
 import { TeleportSalariesDTO } from '../countries/interfaces';
 import { SalaryService } from '../salary/salary.service';
+import { QueryResult } from './interfaces';
 
 @Injectable()
 export class CitiesService {
@@ -35,7 +36,6 @@ export class CitiesService {
             name,
             country,
             rank: 0,
-            voteCount: 0,
             description: await this.commonService.getWikipediaDescription(name),
             image // TODO: Define a default image?
         }
@@ -101,7 +101,6 @@ export class CitiesService {
                 await this.updateCity({
                     ...city,
                     rank: Math.round(cityScoresDTO?.data?.teleport_city_score / 10) ?? 0,
-                    voteCount: 1
                 })
             }
         } catch (err) {
@@ -121,5 +120,13 @@ export class CitiesService {
         } catch (err) {
             console.error(err.response.data);
         }
+    }
+
+    queryCitiesAndCountries = async (query: string) => {
+        const cityResults = await this.cityRepository.createQueryBuilder('city')
+            .where("LOWER(city.name) LIKE :name", { name: `%${query.toLowerCase()}%` })
+            .getMany() as QueryResult[];
+        const countryResults = await this.countriesService.queryCountries(query) as QueryResult[];
+        return cityResults.concat(countryResults);
     }
 }
