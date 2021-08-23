@@ -6,6 +6,18 @@ input {
   outline: none;
 }
 
+#spinner-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 90vh;
+  width: 100%;
+}
+
+#spinner {
+  color: #04B8BE;
+}
+
 .links {
   text-decoration: none;
   color: black;

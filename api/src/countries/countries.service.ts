@@ -3,10 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import axios from 'axios';
 import { CommonService } from '../common/common.service';
 import { getConnection, Repository } from 'typeorm';
-import { RestCountriesDTO, TeleportSalariesDTO } from './interfaces';
+import { RestCountriesDTO, TeleportSalariesDTO, TravelBriefingDTO } from './interfaces';
 import { Country } from './models/country.model';
 import { CountryFactory } from './country.factory';
 import { SalaryService } from '../salary/salary.service';
+import { CountryWeatherService } from '../country-weather/country-weather.service';
 
 @Injectable()
 export class CountriesService {
@@ -15,11 +16,12 @@ export class CountriesService {
         private countryRepository: Repository<Country>,
         private readonly commonService: CommonService,
         private readonly countryFactory: CountryFactory,
-        private readonly salaryService: SalaryService
+        private readonly salaryService: SalaryService,
+        private readonly weatherService: CountryWeatherService
     ) { }
 
     saveCountry(country: Country) {
-        console.log(`Inserting new country: ${country.name}`);
+        console.log(`Saving new country: ${country.name}`);
         return this.countryRepository.save(country);
     }
 
@@ -33,10 +35,10 @@ export class CountriesService {
             for (const country of teleportApiDTO.data) {
                 const checkIfExists = await this.findCountryByName(country.name.common);
                 if (!checkIfExists) {
-                    const countryImage = await this.commonService.getImages(country.name.common);
+                    const countryImage = await this.commonService.getImages(country.name.common, false);
                     const countryDescription = await this.commonService.getWikipediaDescription(country.name.common);
                     const countryPopulation = await this.getCountryPopulation(country.cca2);
-                    const countryToInsert = this.countryFactory.buildCountry(country, countryImage, countryDescription, countryPopulation);
+                    const countryToInsert = this.countryFactory.buildCountry(country, typeof countryImage === 'string' && countryImage, countryDescription, countryPopulation);
                     await this.saveCountry(countryToInsert);
                 }
             }
@@ -68,7 +70,7 @@ export class CountriesService {
             .getMany();
     }
 
-    getCountryById = (id: number) => this.countryRepository.findOne({ where: { id }, relations: ['jobs'] });
+    getCountryById = async (id: number) => this.countryRepository.findOne({ where: { id }, relations: ['jobs', 'cities', 'cities.image', 'weather', 'neighbors'] });
 
     async getCountrySalary(country: Country) {
         try {
@@ -96,5 +98,28 @@ export class CountriesService {
         return await this.countryRepository.createQueryBuilder('country')
             .where("LOWER(country.name) LIKE :name", { name: `%${query.toLowerCase()}%` })
             .getMany();
+    }
+
+    syncTravelBriefingData = async (country: Country) => {
+        try {
+            const travelBriefingDTO = await axios.get<TravelBriefingDTO>(`https://travelbriefing.org/${encodeURI(country.name)}?format=json`);
+            const weatherData = travelBriefingDTO.data.weather;
+            for (const month of Object.keys(weatherData)) {
+                await this.weatherService.buildAndSaveCountryWeatherService(month, country, weatherData[month]);
+            }
+            const neighbors: Country[] = [];
+            for (const neighbor of travelBriefingDTO.data.neighbors) {
+                const neighborCountry = await this.findCountryByName(neighbor.name)
+                if (neighborCountry) neighbors.push(neighborCountry);
+            } 
+            await this.saveCountry({ 
+                ...country,
+                uaAdvise: travelBriefingDTO.data.advise?.UA?.advise ?? null,
+                caAdvise: travelBriefingDTO.data.advise?.CA?.advise.replace(/<\!--.*?-->/g, "") ?? null,
+                neighbors
+            });
+        } catch (err) {
+            console.error(err);
+        }
     }
 }

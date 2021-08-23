@@ -1,0 +1,37 @@
+@import "../../styles/mixins.scss";
+
+@mixin table-row($width) {
+    font-size: 12px;
+    min-height: 20px;
+    width: $width;
+    padding: 14px;
+}
+
+#weather-data {
+    width: 100%;
+    margin: 50px 0px;
+    @include displayFlexJustify(center);
+    text-align: center;
+    #field-name {
+        @include displayFlex(column);
+        margin-top: 36px;
+        .field {
+            @include table-row(100%);
+            font-weight: bolder;
+            @include displayFlexJustify(center);
+        }
+    }
+    .month {
+        font-weight: bolder;
+        margin-bottom: 20px;
+    }
+    .weather-data {
+        @include table-row(40px);
+        border-right: 2px solid white;
+        border-bottom: 2px solid white;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}

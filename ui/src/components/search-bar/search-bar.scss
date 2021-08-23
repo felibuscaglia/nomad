@@ -31,14 +31,28 @@
         overflow-y: scroll;
         width: 470px;
         background: white;
-        span {
+        font-weight: 400;
+        .result {
             text-align: left;
             padding: 21px;
-            display: block;
+            margin-left: 25px;
             width: 100%;
+            @include displayFlex(row);
+            @include links(black);
+            transition: 0.2s;
+            font-weight: bold;
+            #city-image {
+                height: 25px;
+                width: 25px;
+                background-position: center;
+                background-size: cover;
+                border-radius: 4px;
+                margin-right: 10px;
+            }
         }
-        span:hover {
+        .result:hover {
             background: $main-color;
+            color: white;
             cursor: pointer;
         }
     }

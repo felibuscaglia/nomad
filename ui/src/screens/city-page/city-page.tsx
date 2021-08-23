@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { Ad, City, CityPillars, Pillar, RouteComponentProps, SubPillar } from '../../shared/interfaces';
+import { Ad, City, CityPillars, RouteComponentProps, SubPillar } from '../../shared/interfaces';
 import './city-page.scss';
 import StarIcon from '@material-ui/icons/Star';
 import { getCityRatingForPage, getPillarIcon } from '../../shared/utils';

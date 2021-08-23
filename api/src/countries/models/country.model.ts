@@ -1,5 +1,7 @@
 import { CountrySalary } from "../../salary/models/salary.model";
-import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { City } from "../../cities/models/city.model";
+import { CountryWeather } from "../../country-weather/models/country-weather.model";
 
 @Entity()
 export class Country {
@@ -53,4 +55,20 @@ export class Country {
 
     @OneToMany(type => CountrySalary, countrySalary => countrySalary.country)
     jobs?: CountrySalary[];
+
+    @OneToMany(type => City, city => city.country)
+    cities?: City[];
+
+    @Column({ nullable: true })
+    uaAdvise?: string;
+
+    @Column({ nullable: true })
+    caAdvise?: string;
+
+    @ManyToMany(type => Country)
+    @JoinTable()
+    neighbors?: Country[];
+
+    @OneToMany(type => CountryWeather, weather => weather.country)
+    weather?: CountryWeather[];
 }

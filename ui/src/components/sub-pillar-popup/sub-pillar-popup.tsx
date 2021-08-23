@@ -51,7 +51,7 @@ function SubPillarPopup(props: SubPillarProps) {
     return (
         <Dialog open={props.open} id='dialog' onClose={props.onClose} maxWidth={getDialogWidth()} fullWidth>
             <div id='teleport-data'>
-                <a href='https://teleport.org/cities/' target='_blank'>
+                <a href='https://teleport.org/cities/' target='_blank' rel='noreferrer'>
                     <img height='25px' src='https://image.winudf.com/v2/image/b3JnLnRlbGVwb3J0LnRlbGVwb3J0bW9iaWxlX2ljb25fMF8yNDcwYjY3MQ/icon.png?w=&fakeurl=1' />
                     <span>via Teleport</span>
                 </a>

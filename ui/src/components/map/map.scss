@@ -1,0 +1,32 @@
+@import "../../styles/mixins.scss";
+@import "../../styles/variables.scss";
+
+.popup {
+    .link {
+        @include links(white);
+    }
+    .leaflet-popup-content-wrapper {
+        background: transparent;
+        box-shadow: none;
+    }
+    .leaflet-popup-close-button {
+        display: none;
+    }
+    .city-image-map {
+        height: 150px;
+        width: 300px;
+        background-position: center;
+        background-size: cover;
+        border-radius: 12px;
+        @include displayFlexJustify(center);
+        text-decoration: none;
+        h1 {
+            padding: 5px 10px;
+            border-radius: 4px;
+            background: rgba(0, 0, 0, 1);
+            font-weight: 300;
+            text-align: center;
+            max-width: 80%;
+        }
+    }
+}

@@ -1,13 +1,15 @@
 import * as H from "history";
 
 export interface City {
-    id: number;
-    name: string;
-    image: Photo;
-    country: Country;
-    rank: number;
-    description: string;
-    pillars: CityPillars[];
+  id: number;
+  name: string;
+  image: Photo;
+  country: Country;
+  rank: number;
+  description: string;
+  latitude: number;
+  longitude: number;
+  pillars: CityPillars[];
 }
 
 export interface CityPillars {
@@ -20,40 +22,45 @@ export interface Pillar {
   name: string;
 }
 export interface Country {
-    id: number;
-    name: string;
-    image: string | null;
-    independent: boolean;
-    unMember: boolean;
-    currency: string;
-    capital: string;
-    region: string;
-    subregion: string;
-    languages: string;
-    landlocked: boolean;
-    area: number;
-    emojiFlag: string;
-    description: string;
-    population: number;
+  id: number;
+  name: string;
+  image: string | null;
+  independent: boolean;
+  unMember: boolean;
+  currency: string;
+  capital: string;
+  region: string;
+  subregion: string;
+  languages: string;
+  landlocked: boolean;
+  area: number;
+  emojiFlag: string;
+  description: string;
+  population: number;
+  cities?: City[];
+  uaAdvise?: string;
+  caAdvise?: string;
+  weather?: CountryWeather[];
+  neighbors?: Country[];
 }
 
 interface Photo {
-    id: number;
-    photographer: string;
-    site: string;
-    image: string;
+  id: number;
+  photographer: string;
+  site: string;
+  image: string;
 }
 
 export interface ReduxState {
-    jobs: Job[]
+  jobs: Job[]
 }
 
 export interface Ad {
-    id: number;
-    companyName?: string;
-    description?: string;
-    image?: string;
-    local: boolean;
+  id: number;
+  companyName?: string;
+  description?: string;
+  image?: string;
+  local: boolean;
 }
 export interface RouteComponentProps<P> {
   match: match<P>;
@@ -79,12 +86,21 @@ export interface Salary {
 }
 
 export interface SubPillar {
-    id: number;
-    name: string;
-    value: string;
-    type: string;
+  id: number;
+  name: string;
+  value: string;
+  type: string;
 }
 
 export interface QueryResults {
+  id: number;
   name: string;
+  image: Photo | string;
+}
+
+export interface CountryWeather {
+  id: number;
+  month: string;
+  tAvg: number;
+  pAvg: number;
 }

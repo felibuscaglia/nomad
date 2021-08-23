@@ -7,11 +7,11 @@ function Header() {
     return (
         <div id='header'>
             <div className='header-div'>
-                <Link id='link' to='/'><ExploreIcon className='logo' /></Link>
+                <Link className='link' to='/'><ExploreIcon className='logo' /></Link>
                 <SearchBar />
             </div>
             <div className='header-div'>
-                <div className='header-btn'>Map</div>
+                <Link className='link' to='/map'><div className='header-btn'>Map</div></Link>
                 <div className='header-btn-active'>Advertise</div>
             </div>
         </div>

@@ -14,6 +14,7 @@ import { JobModule } from './job/job.module';
 import { SalaryModule } from './salary/salary.module';
 import { CityImagesModule } from './city-images/city-images.module';
 import { SubPillarsModule } from './sub-pillars/sub-pillars.module';
+import { CountryWeatherModule } from './country-weather/country-weather.module';
 
 @Module({
   imports: [
@@ -28,7 +29,8 @@ import { SubPillarsModule } from './sub-pillars/sub-pillars.module';
     JobModule,
     SalaryModule,
     CityImagesModule,
-    SubPillarsModule
+    SubPillarsModule,
+    CountryWeatherModule
   ],
   controllers: [AppController],
   providers: [AppService],

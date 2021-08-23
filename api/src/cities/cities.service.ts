@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { IsNull, Not, Repository } from 'typeorm';
 import { City } from './models/city.model';
 import axios from 'axios';
 import { Country } from 'src/countries/models/country.model';
@@ -31,12 +31,14 @@ export class CitiesService {
         private readonly salaryService: SalaryService
     ) { }
 
-    async saveCity(name: string, country: Country, image: CityImage) {
+    async saveCity(cityDataDTO: UrbanAreasDTO, country: Country, image: CityImage) {
         const newCity: City = {
-            name,
+            name: cityDataDTO?.name,
             country,
             rank: 0,
-            description: await this.commonService.getWikipediaDescription(name),
+            description: await this.commonService.getWikipediaDescription(cityDataDTO?.name),
+            latitude: cityDataDTO?.bounding_box?.latlon?.north,
+            longitude: cityDataDTO?.bounding_box?.latlon?.west,
             image // TODO: Define a default image?
         }
         console.log(`Saving new city: ${name}`);
@@ -49,8 +51,8 @@ export class CitiesService {
             for (const cityDetails of teleportDTO.data._links['ua:item']) {
                 const mainCityDTO = await axios.get<UrbanAreasDTO>(cityDetails.href);
                 const cityCountry = await this.countriesService.findCountryByName(mainCityDTO.data._links['ua:countries'][0].name);
-                const cityImage = await this.cityImagesService.saveCityImage(mainCityDTO.data._links['ua:images'].href);
-                const newCity = await this.saveCity(mainCityDTO.data.name, cityCountry, cityImage);
+                const cityImage = await this.commonService.getImages(mainCityDTO.data.name, true);
+                const newCity = await this.saveCity(mainCityDTO.data, cityCountry, typeof cityImage !== 'string' && cityImage);
                 await this.getCityScores(newCity, mainCityDTO.data._links['ua:scores'].href);
             }
         } catch (err) {
@@ -79,6 +81,7 @@ export class CitiesService {
     }
 
     async updateCity(city: City) {
+        console.log(`Updating ${city.name}`);
         await this.cityRepository.update(city.id, city);
     }
 
@@ -125,8 +128,21 @@ export class CitiesService {
     queryCitiesAndCountries = async (query: string) => {
         const cityResults = await this.cityRepository.createQueryBuilder('city')
             .where("LOWER(city.name) LIKE :name", { name: `%${query.toLowerCase()}%` })
+            .leftJoinAndSelect("city.image", "image")
             .getMany() as QueryResult[];
         const countryResults = await this.countriesService.queryCountries(query) as QueryResult[];
         return cityResults.concat(countryResults);
+    }
+
+    findCityByName = (name: string) => this.cityRepository.findOne({ where: { name } });
+
+    getCitiesForMap = () => {
+        return this.cityRepository.find({
+            where: {
+                latitude: Not(IsNull()),
+                longitude: Not(IsNull())
+            },
+            relations: ['image']
+        })
     }
 }

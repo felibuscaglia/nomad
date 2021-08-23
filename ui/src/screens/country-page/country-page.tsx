@@ -6,6 +6,10 @@ import { Cancel, CheckCircle } from '@material-ui/icons';
 import store from '../../store/store';
 import { observer, inject } from 'mobx-react';
 import JobSalaryCalculator from '../../components/job-salary-calculator/job-salary-calculator';
+import CityPreview from '../../components/city-preview/city-preview';
+import LoadingScreen from '../loading-screen/loading-screen';
+import ClimateTable from '../../components/climate-table/climate-table';
+import CountryPreview from '../../components/country-preview/country-preview';
 
 interface MatchParams {
     countryId: string;
@@ -14,18 +18,26 @@ interface MatchParams {
 function CountryPage(props: RouteComponentProps<MatchParams>) {
     const { countryId } = props?.match?.params;
     const [country, setCountry] = useState<Country>({} as Country);
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         axios.get<Country>(`/countries/${countryId}`)
-            .then(countryDTO => setCountry(countryDTO.data))
+            .then(countryDTO => {
+                setCountry(countryDTO.data);
+                setLoading(false);
+            })
             .catch(err => console.error(err));
 
         store.getAllJobs();
 
-    }, [countryId])
+    }, [countryId]);
 
     function getIcon(item: boolean) {
         return item ? <CheckCircle className='check' /> : <Cancel className='negative' />
+    }
+
+    if (loading) {
+        return <LoadingScreen />
     }
 
     return (
@@ -76,8 +88,28 @@ function CountryPage(props: RouteComponentProps<MatchParams>) {
                     <span>Population</span>
                     {country?.population?.toLocaleString()}
                 </div>
+                <div className='pillar'>
+                    <span>🇺🇸 Travel Advice</span>
+                    {country?.uaAdvise ?? 'N/A'}
+                </div>
+                <div className='pillar'>
+                    <span>🇨🇦 Travel Advice</span>
+                    {country?.caAdvise ?? 'N/A'}
+                </div>
             </div>
-           <JobSalaryCalculator entityID={countryId} entityName={country?.name} entityType={'country'} />
+            <JobSalaryCalculator entityID={countryId} entityName={country?.name} entityType={'country'} />
+            <h3>Weather in {country?.name}</h3>
+            <ClimateTable weatherData={country?.weather} />
+            {country?.cities?.length !== 0 && <h3>Cities</h3>}
+            {country?.cities?.length !== 0 &&
+                <div className='cities-container'>
+                    {country.cities?.map((city, i) => <CityPreview key={i} city={city} />)}
+                </div>
+            }
+            <h3>{country?.name} neighbors</h3>
+            <div id='neighbors-wrapper'>
+                {country?.neighbors?.map((neighbor, i) => <CountryPreview country={neighbor} key={i} />)}
+            </div>
         </div>
     )
 }

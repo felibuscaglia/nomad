@@ -6,9 +6,10 @@ import { Country } from './models/country.model';
 import { CommonModule } from 'src/common/common.module';
 import { CountryFactory } from './country.factory';
 import { SalaryModule } from '../salary/salary.module';
+import { CountryWeatherModule } from '../country-weather/country-weather.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Country]), CommonModule, SalaryModule],
+  imports: [TypeOrmModule.forFeature([Country]), CommonModule, SalaryModule, CountryWeatherModule],
   providers: [CountriesService, CountryFactory],
   controllers: [CountriesController],
   exports: [CountriesService, CountryFactory]

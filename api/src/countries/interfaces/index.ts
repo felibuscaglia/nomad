@@ -35,3 +35,23 @@ export interface JobData {
         percentile_75: number;
     }
 }
+
+export interface TravelBriefingDTO {
+    weather: {
+        [key: string]: MonthWeather;
+    }
+    advise: {
+        UA?: {
+            advise: string;
+        },
+        CA?: {
+            advise: string;
+        }
+    }
+    neighbors: { name: string }[];
+}
+
+export interface MonthWeather {
+    pAvg: string;
+    tAvg: string;
+}

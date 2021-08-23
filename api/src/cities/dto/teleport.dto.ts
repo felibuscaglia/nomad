@@ -10,9 +10,17 @@ export interface UrbanAreasDTO {
         'ua:images': UALinks,
         'ua:salaries': UALinks,
         'ua:scores': UALinks,
-        'ua:countries': { href: string; name: string } []
+        'ua:countries': { href: string; name: string }[]
     }
     name: string;
+    bounding_box: {
+        latlon: {
+            east: number;
+            north: number;
+            south: number;
+            west: number;
+        }
+    },
 }
 
 export interface UrbanAreaImagesDTO {

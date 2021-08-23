@@ -4,7 +4,8 @@
 #container {
     font-family: $header-font;
     @include displayFlex(column, flex-start);
-    padding: 20px 10%;
+    //padding: 20px 10%;
+    margin: 50px 116px;
     h1 {
         font-size: 48px;
         font-weight: 700;

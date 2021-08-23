@@ -20,22 +20,13 @@ export class City {
     description: string;
 
     @Column({ nullable: true })
-    population?: number;
+    population?: number; // TODO: Display population
 
-    @Column({ nullable: true, type: 'decimal' })
-    weatherAverageHigh?: number;
+    @Column({ default: null, type: 'decimal' })
+    latitude: number;
 
-    @Column({ nullable: true, type: 'decimal' })
-    weatherAverageLow?: number;
-
-    @Column({ nullable: true, type: 'decimal' })
-    avgDayLength?: number;
-
-    @Column({ nullable: true })
-    weatherType?: string;
-
-    @Column({ nullable: true, type: 'decimal' })
-    rainyDaysPerYear?: number
+    @Column({ default: null, type: 'decimal' })
+    longitude: number;
 
     @ManyToOne(type => Country)
     @JoinColumn({ name: 'country_id' })
@@ -52,5 +43,5 @@ export class City {
     jobs?: CitySalary[];
 
     @OneToMany(type => SubPillar, subPillar => subPillar.city)
-    cities?: SubPillar[];
+    subPillars?: SubPillar[];
 }

@@ -16,6 +16,9 @@
         width: 50%;
         padding: 0px 116px;
         font-family: $header-font;
+        .link {
+            @include links(white);
+        }
         h1 {
             font-size: 56px;
         }
@@ -58,13 +61,14 @@
         cursor: pointer;
         border: 2px solid #d4d4d4;
     }
-    .cities-container {
-        margin: 45px 0px;
-        @include displayFlexJustify(center, flex-start);
-        flex-wrap: wrap;
-        h4 {
-            width: 1200px;
-            text-align: center;
-        }
+}
+
+.cities-container {
+    margin: 50px 0px 25px 0px;
+    @include displayFlexJustify(center, flex-start);
+    flex-wrap: wrap;
+    h4 {
+        width: 1200px;
+        text-align: center;
     }
 }
